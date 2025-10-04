@@ -1,12 +1,12 @@
-// Diálogos do Operador (Nivaldo)
-const operadorDialogues = [
+// Dialogues of The Operator (Nivaldo) - Portuguese
+const operadorDialoguesPT = [
     {
         npc: false,
         text: "Uau! Quantos botões e cabos! Oi, moço! Você é o responsável por cuidar de toda essa energia?"
     },
     {
         npc: true,
-        text: "Oi, garotão! Sou sim! Eu ajudo a manter a rede elétrica funcionando direitinho, pra que a luz chegue na casa de todo mundo"
+        text: "Oi, %playerName%! Sou sim! Eu ajudo a manter a rede elétrica funcionando direitinho, pra que a luz chegue na casa de todo mundo"
     },
     {
         npc: false,
@@ -39,7 +39,51 @@ const operadorDialogues = [
     }
 ];
 
-// Exportar para uso global
+// Dialogues of The Operator (Nivaldo) - English
+const operadorDialoguesEN = [
+    {
+        npc: false,
+        text: "Wow! So many buttons and cables! Hi, sir! Are you responsible for taking care of all this energy?"
+    },
+    {
+        npc: true,
+        text: "Hi, kiddo! Yes I am! I help keep the electrical grid working properly, so that electricity reaches everyone's house"
+    },
+    {
+        npc: false,
+        text: "That's cool! And I heard that the Sun can sometimes interfere with your work. Is that true?"
+    },
+    {
+        npc: true,
+        text: "Yes, it's true. When the Sun releases a lot of energy in a solar storm, some of it can reach here and mess up the wires and equipment that transmit electricity. On days like that, we need to keep an eye out to avoid blackouts"
+    },
+    {
+        type: "html",
+        media: "characters/operador/assets/html/desafio.html",
+        caption: "Operator Challenge"
+    },
+    {
+        npc: false,
+        text: "Wow! So even my house's electricity can be affected by the Sun's storms?"
+    },
+    {
+        npc: true,
+        text: "It can, but don't worry. Scientists and us operators stay alert to keep everything working properly"
+    },
+    {
+        npc: false,
+        text: "That's good! The Sun is really powerful... and full of tricks!"
+    },
+    {
+        npc: true,
+        text: "That's right! And that's why it's important to know about these phenomena, so we can better understand how the Sun communicates with Earth. I read the other day that NASA is going to launch another package of space weather instruments, HERMES. So cool!"   
+    }
+];
+
+// Export for global use
 if (typeof window !== 'undefined') {
-    window.operadorDialogues = operadorDialogues;
+    window.operadorDialoguesPT = operadorDialoguesPT;
+    window.operadorDialoguesEN = operadorDialoguesEN;
+    // Keep backward compatibility
+    window.operadorDialogues = operadorDialoguesEN;
 }

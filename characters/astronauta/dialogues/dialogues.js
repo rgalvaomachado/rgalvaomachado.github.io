@@ -1,5 +1,5 @@
-// Diálogos dA Astronauta (Lúcia)
-const astronautaDialogues = [
+// Dialogues of The Astronaut (Lúcia) - Portuguese
+const astronautaDialoguesPT = [
     {
         type: "html",
         media: "characters/astronauta/assets/html/desafio.html",
@@ -23,7 +23,7 @@ const astronautaDialogues = [
     },
     {
         npc: true,
-        text: "O Sol passa por um ciclo, como se tivesse “humores”. Às vezes ele fica mais calmo, e às vezes fica mais agitado, soltando muita energia e partículas pelo espaço. Chamamos isso de ciclo de atividade solar, que dura em média 11 anos"
+        text: "O Sol passa por um ciclo, como se tivesse 'humores'. Às vezes ele fica mais calmo, e às vezes fica mais agitado, soltando muita energia e partículas pelo espaço. Chamamos isso de ciclo de atividade solar, que dura em média 11 anos"
     },
     {
         npc: false,
@@ -31,7 +31,7 @@ const astronautaDialogues = [
     },
     {
         npc: true,
-        text: "são pedacinhos muito, muito pequenos, como minúsculas bolinhas de energia! A gente chama de eventos de partículas solares. Quando o Sol fica agitado, ele lança um monte dessas partículas, e elas viajam bem rápido pelo espaço"
+        text: "São pedacinhos muito, muito pequenos, como minúsculas bolinhas de energia! A gente chama de eventos de partículas solares. Quando o Sol fica agitado, ele lança um monte dessas partículas, e elas viajam bem rápido pelo espaço"
     },
     {
         npc: false,
@@ -52,7 +52,7 @@ const astronautaDialogues = [
     },
     {
         npc: true,
-        text: "Isso mesmo! São erupções solares e ejeções de massa coronal. É o Sol trabalhando, brilhando e mandando energia para o espaço. Ele parece calmo, mas está sempre em movimento, girando e soltando energia"
+        text: "Isso são erupções solares e ejeções de massa coronal. É o Sol trabalhando, brilhando e mandando energia para o espaço. Ele parece calmo, mas está sempre em movimento, girando e soltando energia"
     },
     {
         npc: false,
@@ -72,7 +72,84 @@ const astronautaDialogues = [
     }
 ];
 
-// Exportar para uso global
+// Dialogues of The Astronaut (Lúcia) - English
+const astronautaDialoguesEN = [
+    {
+        type: "html",
+        media: "characters/astronauta/assets/html/desafio.html",
+        caption: "Astronaut Challenge"
+    },
+    {
+        npc: false,
+        text: "Wooow! What an incredible view! There's Earth... and look at the Sun shining so close!"
+    },
+    {
+        npc: false,
+        text: "Hi! Are you an astronaut?"
+    },
+    {
+        npc: true,
+        text: "Hi, yes I am, my name is Lúcia! You arrived just in time, the Sun is very active today!"
+    },
+    {
+        npc: false,
+        text: "Active? What do you mean?"
+    },
+    {
+        npc: true,
+        text: "The Sun goes through a cycle, as if it had 'moods'. Sometimes it's calmer, and sometimes it gets more agitated, releasing a lot of energy and particles into space. We call this the solar activity cycle, which lasts on average 11 years"
+    },
+    {
+        npc: false,
+        text: "And what are these particles it releases?"
+    },
+    {
+        npc: true,
+        text: "They are very, very small pieces, like tiny energy balls! We call them solar particle events. When the Sun gets agitated, it launches a bunch of these particles, and they travel very fast through space"
+    },
+    {
+        npc: false,
+        text: "Wow! And do you guys up here feel that?"
+    },
+    {
+        npc: true,
+        text: "Yes we do! That's why we use suits and ships with special protection. These particles can be dangerous, so we need to keep an eye on scientists' alerts"   
+    },
+    {
+        npc: false,
+        text: "Look! You can see the Sun releasing some sparks there!"
+    },
+    {
+        type: "video",
+        media: "characters/astronauta/assets/video/play.mp4",
+        caption: "Looking at the Sun"
+    },
+    {
+        npc: true,
+        text: "That's right! Those are solar flares and coronal mass ejections. It's the Sun working, shining and sending energy into space. It looks calm, but it's always in motion, rotating and releasing energy"
+    },
+    {
+        npc: false,
+        text: "How incredible! The Sun really has attitude!"
+    },
+    {
+        npc: true,
+        text: "Yes! It's like the heart of our solar system, giving light, heat and energy to all the planets. But sometimes, it gets a little excited!"
+    },
+    {
+        npc: false,
+        text: "Hahaha! So the Sun is really animated!"
+    },
+    {
+        npc: true,
+        text: "Yes! And now that you've met so many people who feel its influence, how about going back to Earth and telling what you learned?"
+    }
+];
+
+// Export for global use
 if (typeof window !== 'undefined') {
-    window.astronautaDialogues = astronautaDialogues;
+    window.astronautaDialoguesPT = astronautaDialoguesPT;
+    window.astronautaDialoguesEN = astronautaDialoguesEN;
+    // Keep backward compatibility
+    window.astronautaDialogues = astronautaDialoguesEN;
 }

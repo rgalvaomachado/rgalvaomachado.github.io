@@ -1,49 +1,59 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Descobrindo o sol - uma história interativa sobre energia solar</title>
+    <title>Discovering the Sun - an interactive story about solar energy</title>
     <link rel="stylesheet" href="shared/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Tela de Personalização -->
+    <!-- Personalization Screen -->
     <div class="screen" id="personalizacao">
         <div class="container">
+            <!-- Language Selector -->
+            <div class="language-selector">
+                <button class="lang-btn" id="langPt" onclick="setLanguage('pt')">
+                    🇧🇷 Português
+                </button>
+                <button class="lang-btn" id="langEn" onclick="setLanguage('en')">
+                    🇺🇸 English
+                </button>
+            </div>
+            
             <div class="personalization-content">
                 <div class="game-title">
-                    <h1>🌟 Descobrindo o Sol 🌟</h1>
-                    <p class="subtitle">Vamos criar sua aventura solar!</p>
+                    <h1 id="gameTitle">🌟 Discovering the Sun 🌟</h1>
+                    <p class="subtitle" id="gameSubtitle">Let's create your solar adventure!</p>
                 </div>
                 
                 <div class="name-section">
-                    <h2>Qual é o seu nome?</h2>
-                    <input type="text" id="playerName" placeholder="Digite seu nome aqui..." maxlength="20">
+                    <h2 id="nameQuestion">What's your name?</h2>
+                    <input type="text" id="playerName" placeholder="Type your name here..." maxlength="20">
                 </div>
                 
                 <div class="character-selection">
-                    <h2>Escolha seu personagem:</h2>
+                    <h2 id="characterQuestion">Choose your character:</h2>
                     <div class="character-options">
                 <div class="character-option" onclick="selectCharacter('curioso')">
                     <div class="character-avatar curioso">
-                        <img src="shared/assets/bodies/pj1.png" alt="Personagem Curioso">
+                        <img src="shared/assets/bodies/pj1.png" alt="Curious Character">
                     </div>
                 </div>
                 <div class="character-option" onclick="selectCharacter('aventureiro')">
                     <div class="character-avatar aventureiro">
-                        <img src="shared/assets/bodies/pj2.png" alt="Personagem Aventureiro">
+                        <img src="shared/assets/bodies/pj2.png" alt="Adventurer Character">
                     </div>
                 </div>
                 <div class="character-option" onclick="selectCharacter('explorador')">
                     <div class="character-avatar explorador">
-                        <img src="shared/assets/bodies/pj3.png" alt="Personagem Explorador">
+                        <img src="shared/assets/bodies/pj3.png" alt="Explorer Character">
                     </div>
                 </div>
                 <div class="character-option" onclick="selectCharacter('inventor')">
                     <div class="character-avatar inventor">
-                        <img src="shared/assets/bodies/pj4.png" alt="Personagem Inventor">
+                        <img src="shared/assets/bodies/pj4.png" alt="Inventor Character">
                     </div>
                 </div>
                     </div>
@@ -51,46 +61,46 @@
                 
                 <button id="startAdventureBtn" onclick="iniciarAventura()" class="btn btn-primary btn-large" disabled>
                     <i class="fas fa-play"></i>
-                    Iniciar Aventura!
+                    <span id="startButtonText">Start Adventure!</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Tela de Introdução da História -->
+    <!-- Story Introduction Screen -->
     <div class="screen hidden" id="historia">
         <div class="cinematic-container">
-            <!-- Cena de fundo -->
+            <!-- Background scene -->
             <div class="scene-background home-scene">
             </div>
             
-            <!-- Personagens em cena -->
+            <!-- Characters in scene -->
             <div class="scene-characters">
                 <div class="character-spotlight lucas-spotlight">
                     <div class="lucas-avatar-cinematic">
-                        <img id="playerCharacterImage" src="shared/assets/bodies/pj1.png" alt="Personagem do Jogador">
+                        <img id="playerCharacterImage" src="shared/assets/bodies/pj1.png" alt="Player Character">
                         <div class="character-shadow"></div>
                     </div>
                 </div>
                 
                 <div class="character-spotlight npc-spotlight">
                     <div class="npc-avatar-cinematic tio">
-                        <img src="characters/tio-joao/assets/body/tioJoao.png" alt="Tio João">
+                        <img src="characters/tio-joao/assets/body/tioJoao.png" alt="Uncle João">
                         <div class="character-shadow"></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Sistema de diálogos cinematográficos -->
+            <!-- Cinematic dialogue system -->
             <div class="cinematic-dialogue-system">
                 <div class="dialogue-container">
                     <div class="dialogue-box cinematic-dialogue" id="dialogueBox">
                         <div class="speaker-info">
                             <div class="speaker-avatar" id="speakerAvatar"></div>
-                            <div class="speaker-name" id="speakerName">Tio João</div>
+                            <div class="speaker-name" id="speakerName">Uncle João</div>
                         </div>
                         <div class="dialogue-text" id="dialogueText">
-                            <span id="dialogueText">💭 pensando...</span>
+                            <span id="dialogueText">💭 thinking...</span>
                         </div>
                         <div class="dialogue-controls">
                             <button class="continue-btn" id="continueBtn" onclick="nextDialogue()">
@@ -105,7 +115,7 @@
         </div>
     </div>
 
-    <!-- Tela de Transição -->
+    <!-- Transition Screen -->
     <div class="screen hidden" id="transicao">
         <div class="transition-container">
             <div class="transition-content">
@@ -124,8 +134,8 @@
                         </div>
                     </div>
                 </div>
-                <h2 class="transition-title">Conhecendo os Amigos...</h2>
-                <p class="transition-subtitle">Preparando as conversas incríveis!</p>
+                <h2 class="transition-title" id="transitionTitle">Meeting the Friends...</h2>
+                <p class="transition-subtitle" id="transitionSubtitle">Preparing the amazing conversations!</p>
                 <div class="loading-dots">
                     <div class="dot"></div>
                     <div class="dot"></div>
@@ -135,57 +145,57 @@
         </div>
     </div>
 
-    <!-- Tela de Escolha de Personagens -->
+    <!-- Character Selection Screen -->
     <div class="screen hidden" id="escolhaPersonagem">
         <div class="container">
             <div class="character-selection">
                 <div class="story-header">
                     <div class="lucas-avatar-small">
-                        <img id="playerCharacterHead" src="shared/assets/heads/pj1Head.png" alt="Personagem do Jogador">
+                        <img id="playerCharacterHead" src="shared/assets/heads/pj1Head.png" alt="Player Character">
                     </div>
                     <div class="story-text">
-                        <h2>Escolha um amigo para conhecer!</h2>
-                        <p>Clique em um dos amigos do tio João para descobrir como eles usam o sol! 🌟</p>
+                        <h2 id="chooseFriendText">Choose a friend to meet!</h2>
+                        <p id="friendDescription">Click on one of Uncle João's friends to discover how they deal with space weather! 🌟</p>
                     </div>
                 </div>
                 
                 <div class="characters-grid" id="charactersGrid">
-                    <!-- Personagens serão adicionados dinamicamente conforme descobertos -->
+                    <!-- Characters will be added dynamically as discovered -->
                 </div>
                 
                 <button class="btn btn-secondary" onclick="voltarHistoria()">
                     <i class="fas fa-arrow-left"></i>
-                    Voltar
+                    <span id="backButtonText">Back</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Conversa com A Agricultora -->
+    <!-- Conversation with The Farmer -->
     <div class="screen hidden" id="conversandoAgricultor">
         <div class="cinematic-container">
-            <!-- Cena de fundo -->
+            <!-- Background scene -->
             <div class="scene-background farm-scene">
             </div>
             
-            <!-- Personagens em cena -->
+            <!-- Characters in scene -->
             <div class="scene-characters">
                 <div class="character-spotlight lucas-spotlight">
                     <div class="lucas-avatar-cinematic">
-                        <img id="playerCharacterImage" src="shared/assets/bodies/pj1.png" alt="Personagem do Jogador">
+                        <img id="playerCharacterImage" src="shared/assets/bodies/pj1.png" alt="Player Character">
                         <div class="character-shadow"></div>
                     </div>
                 </div>
                 
                 <div class="character-spotlight npc-spotlight">
                     <div class="npc-avatar-cinematic agricultor">
-                        <img src="characters/agricultor/assets/body/agricultor.png" alt="Rosa - A Agricultora">
+                        <img src="characters/agricultor/assets/body/agricultor.png" alt="Rosa - The Farmer">
                         <div class="character-shadow"></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Sistema de diálogos cinematográficos -->
+            <!-- Cinematic dialogue system -->
             <div class="cinematic-dialogue-system">
                 <div class="dialogue-container">
                     <div class="dialogue-box cinematic-dialogue" id="dialogueBox">
@@ -194,7 +204,7 @@
                             <div class="speaker-name" id="speakerName">Rosa</div>
                         </div>
                         <div class="dialogue-text" id="dialogueText">
-                            <span id="dialogueText">💭 pensando...</span>
+                            <span id="dialogueText">💭 thinking...</span>
                         </div>
                         <div class="dialogue-controls">
                             <button class="continue-btn" id="continueBtn" onclick="nextDialogue()">
@@ -206,41 +216,41 @@
             </div>
             
             
-            <!-- Botão de saída -->
+            <!-- Exit button -->
             <div class="exit-dialogue">
                 <button class="btn btn-secondary" onclick="voltarEscolha()">
                     <i class="fas fa-arrow-left"></i>
-                    Voltar
+                    Back
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Conversa com o Piloto -->
+    <!-- Conversation with The Pilot -->
     <div class="screen hidden" id="conversandoPiloto">
         <div class="cinematic-container">
-            <!-- Cena de fundo -->
+            <!-- Background scene -->
             <div class="scene-background airport-scene">
             </div>
             
-            <!-- Personagens em cena -->
+            <!-- Characters in scene -->
             <div class="scene-characters">
                 <div class="character-spotlight lucas-spotlight">
                     <div class="lucas-avatar-cinematic">
-                        <img id="playerCharacterImage" src="shared/assets/bodies/pj1.png" alt="Personagem do Jogador">
+                        <img id="playerCharacterImage" src="shared/assets/bodies/pj1.png" alt="Player Character">
                         <div class="character-shadow"></div>
                     </div>
                 </div>
                 
                 <div class="character-spotlight npc-spotlight">
                     <div class="npc-avatar-cinematic piloto">
-                        <img src="characters/piloto/assets/body/piloto.png" alt="Carlos - O Piloto">
+                        <img src="characters/piloto/assets/body/piloto.png" alt="Carlos - The Pilot">
                         <div class="character-shadow"></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Sistema de diálogos cinematográficos -->
+            <!-- Cinematic dialogue system -->
             <div class="cinematic-dialogue-system">
                 <div class="dialogue-container">
                     <div class="dialogue-box cinematic-dialogue" id="dialogueBox">
@@ -249,7 +259,7 @@
                             <div class="speaker-name" id="speakerName">Carlos</div>
                         </div>
                         <div class="dialogue-text" id="dialogueText">
-                            <span id="dialogueText">💭 pensando...</span>
+                            <span id="dialogueText">💭 thinking...</span>
                         </div>
                         <div class="dialogue-controls">
                             <button class="continue-btn" id="continueBtn" onclick="nextDialogue()">
@@ -260,7 +270,7 @@
                 </div>
             </div>
             
-            <!-- Barra de progresso do diálogo -->
+            <!-- Dialogue progress bar -->
             <div class="dialogue-progress">
                 <div class="progress-dots">
                     <div class="dot active"></div>
@@ -271,41 +281,41 @@
                 </div>
             </div>
             
-            <!-- Botão de saída -->
+            <!-- Exit button -->
             <div class="exit-dialogue">
                 <button class="btn btn-secondary" onclick="voltarEscolha()">
                     <i class="fas fa-arrow-left"></i>
-                    Voltar
+                    Back
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Conversa com A Astronauta -->
+    <!-- Conversation with The Astronaut -->
     <div class="screen hidden" id="conversandoAstronauta">
         <div class="cinematic-container">
-            <!-- Cena de fundo -->
+            <!-- Background scene -->
             <div class="scene-background space-scene">
             </div>
             
-            <!-- Personagens em cena -->
+            <!-- Characters in scene -->
             <div class="scene-characters">
                 <div class="character-spotlight lucas-spotlight">
                     <div class="lucas-avatar-cinematic">
-                        <img id="playerCharacterImage" src="shared/assets/bodies/pj1.png" alt="Personagem do Jogador">
+                        <img id="playerCharacterImage" src="shared/assets/bodies/pj1.png" alt="Player Character">
                         <div class="character-shadow"></div>
                     </div>
                 </div>
                 
                 <div class="character-spotlight npc-spotlight">
                     <div class="npc-avatar-cinematic astronauta">
-                        <img src="characters/astronauta/assets/body/astronauta.png" alt="Lúcia - A Astronauta">
+                        <img src="characters/astronauta/assets/body/astronauta.png" alt="Lúcia - The Astronaut">
                         <div class="character-shadow"></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Sistema de diálogos cinematográficos -->
+            <!-- Cinematic dialogue system -->
             <div class="cinematic-dialogue-system">
                 <div class="dialogue-container">
                     <div class="dialogue-box cinematic-dialogue" id="dialogueBox">
@@ -314,7 +324,7 @@
                             <div class="speaker-name" id="speakerName">Lúcia</div>
                         </div>
                         <div class="dialogue-text" id="dialogueText">
-                            <span id="dialogueText">💭 pensando...</span>
+                            <span id="dialogueText">💭 thinking...</span>
                         </div>
                         <div class="dialogue-controls">
                             <button class="continue-btn" id="continueBtn" onclick="nextDialogue()">
@@ -325,7 +335,7 @@
                 </div>
             </div>
             
-            <!-- Barra de progresso do diálogo -->
+            <!-- Dialogue progress bar -->
             <div class="dialogue-progress">
                 <div class="progress-dots">
                     <div class="dot active"></div>
@@ -336,35 +346,35 @@
                 </div>
             </div>
             
-            <!-- Botão de saída será controlado dinamicamente pelo JavaScript -->
+            <!-- Exit button will be controlled dynamically by JavaScript -->
         </div>
     </div>
 
-    <!-- Conversa com o Operador Elétrico -->
+    <!-- Conversation with The Electrical Operator -->
     <div class="screen hidden" id="conversandoOperador">
         <div class="cinematic-container">
-            <!-- Cena de fundo -->
+            <!-- Background scene -->
             <div class="scene-background power-plant-scene">
             </div>
             
-            <!-- Personagens em cena -->
+            <!-- Characters in scene -->
             <div class="scene-characters">
                 <div class="character-spotlight lucas-spotlight">
                     <div class="lucas-avatar-cinematic">
-                        <img id="playerCharacterImage" src="shared/assets/bodies/pj1.png" alt="Personagem do Jogador">
+                        <img id="playerCharacterImage" src="shared/assets/bodies/pj1.png" alt="Player Character">
                         <div class="character-shadow"></div>
                     </div>
                 </div>
                 
                 <div class="character-spotlight npc-spotlight">
                     <div class="npc-avatar-cinematic operador">
-                        <img src="characters/operador/assets/body/operador.png" alt="Nivaldo - O Operador">
+                        <img src="characters/operador/assets/body/operador.png" alt="Nivaldo - The Operator">
                         <div class="character-shadow"></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Sistema de diálogos cinematográficos -->
+            <!-- Cinematic dialogue system -->
             <div class="cinematic-dialogue-system">
                 <div class="dialogue-container">
                     <div class="dialogue-box cinematic-dialogue" id="dialogueBox">
@@ -373,7 +383,7 @@
                             <div class="speaker-name" id="speakerName">Nivaldo</div>
                         </div>
                         <div class="dialogue-text" id="dialogueText">
-                            <span id="dialogueText">💭 pensando...</span>
+                            <span id="dialogueText">💭 thinking...</span>
                         </div>
                         <div class="dialogue-controls">
                             <button class="continue-btn" id="continueBtn" onclick="nextDialogue()">
@@ -384,7 +394,7 @@
                 </div>
             </div>
             
-            <!-- Barra de progresso do diálogo -->
+            <!-- Dialogue progress bar -->
             <div class="dialogue-progress">
                 <div class="progress-dots">
                     <div class="dot active"></div>
@@ -398,65 +408,65 @@
         </div>
     </div>
 
-    <!-- Tela Final -->
+    <!-- Final Screen -->
     <div id="fim" class="screen hidden">
         <div class="final-screen">
-            <!-- Personagens borrados nas laterais -->
+            <!-- Blurred characters on the sides -->
             <div class="background-characters">
                 <div class="blurred-character left">
-                    <img src="shared/assets/bodies/pj1.png" alt="Personagem">
+                    <img src="shared/assets/bodies/pj1.png" alt="Character">
                 </div>
                 <div class="blurred-character right">
-                    <img src="shared/assets/bodies/pj2.png" alt="Personagem">
+                    <img src="shared/assets/bodies/pj2.png" alt="Character">
                 </div>
             </div>
             
-            <!-- Conteúdo principal centralizado -->
+            <!-- Main content centered -->
             <div class="final-content">
-                <h1 class="congratulations-title">Parabéns!</h1>
-                <p class="congratulations-subtitle">Você completou a aventura solar!</p>
+                <h1 class="congratulations-title" id="congratulationsTitle">Congratulations!</h1>
+                <p class="congratulations-subtitle" id="congratulationsSubtitle">You completed the solar adventure!</p>
                 
                 <div class="friends-card">
                     <h3 class="friends-title">
                         <i class="fas fa-trophy"></i>
-                        Seus Amigos Conhecidos:
+                        <span id="friendsTitle">Your Friends Met:</span>
                     </h3>
                     <div class="friends-grid">
                         <div class="friend-item">
                             <i class="fas fa-seedling"></i>
-                            <span>Rosa - A Agricultora</span>
+                            <span>Rosa - The Farmer</span>
                         </div>
                         <div class="friend-item">
                             <i class="fas fa-plane"></i>
-                            <span>Carlos - O Piloto</span>
+                            <span>Carlos - The Pilot</span>
                         </div>
                         <div class="friend-item">
                             <i class="fas fa-bolt"></i>
-                            <span>Nivaldo - O Operador</span>
+                            <span>Nivaldo - The Operator</span>
                         </div>
                         <div class="friend-item">
                             <i class="fas fa-rocket"></i>
-                            <span>Lúcia - A Astronauta</span>
+                            <span>Lúcia - The Astronaut</span>
                         </div>
                     </div>
                 </div>
                 
                 <button class="play-again-btn" onclick="reiniciarAventura()">
                     <i class="fas fa-redo"></i>
-                    Jogar Novamente!
+                    <span id="playAgainText">Play Again!</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Carregar diálogos dos personagens -->
+    <!-- Load character dialogues -->
     <script src="characters/tio-joao/dialogues/dialogues.js"></script>
     <script src="characters/agricultor/dialogues/dialogues.js"></script>
     <script src="characters/piloto/dialogues/dialogues.js"></script>
     <script src="characters/operador/dialogues/dialogues.js"></script>
     <script src="characters/astronauta/dialogues/dialogues.js"></script>
     
-    <!-- Script principal -->
+    <!-- Main script -->
     <script src="shared/js/script.js"></script>
 </body>
 </html>

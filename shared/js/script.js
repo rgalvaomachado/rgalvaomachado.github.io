@@ -1,100 +1,281 @@
 // ========================================
-// JOGO INFANTIL: DESCOBRINDO O SOL
-// Sistema de Aventura Interativa
+// CHILDREN'S GAME: DISCOVERING THE SUN
+// Interactive Adventure System
 // ========================================
 
 // ========================================
-// VARIÁVEIS GLOBAIS
+// GLOBAL VARIABLES
 // ========================================
 let currentScreen = 'personalizacao';
 let visitedCharacters = [];
 let playerName = '';
 let selectedCharacter = '';
 let conversationCompleted = false;
+let currentLanguage = 'en'; // Default language
 
-// Sistema de diálogos
+// ========================================
+// LANGUAGE SYSTEM
+// ========================================
+const translations = {
+    pt: {
+        // Main page
+        gameTitle: "🌟 Descobrindo o Sol 🌟",
+        gameSubtitle: "Vamos criar sua aventura solar!",
+        nameQuestion: "Qual é o seu nome?",
+        namePlaceholder: "Digite seu nome aqui...",
+        characterQuestion: "Escolha seu personagem:",
+        startAdventure: "Iniciar Aventura!",
+        chooseNameAndCharacter: "Escolha seu nome e personagem",
+        
+        // Character selection
+        chooseFriend: "Escolha um amigo para conhecer!",
+        friendDescription: "Clique em um dos amigos do tio João para descobrir como eles usam o sol! 🌟",
+        backButton: "Voltar",
+        
+        // Transition
+        transitionTitle: "Conhecendo os Amigos...",
+        transitionSubtitle: "Preparando as conversas incríveis!",
+        
+        // Final screen
+        congratulations: "Parabéns!",
+        completedAdventure: "Você completou a aventura solar!",
+        friendsTitle: "Seus Amigos Conhecidos:",
+        playAgain: "Jogar Novamente!",
+        
+        // Character names
+        uncleJoao: "Tio João",
+        rosa: "Rosa",
+        carlos: "Carlos",
+        nivaldo: "Nivaldo",
+        lucia: "Lúcia",
+        
+        // Character titles
+        theFarmer: "A Agricultora",
+        thePilot: "O Piloto",
+        theOperator: "O Operador",
+        theAstronaut: "A Astronauta",
+        
+        // Messages
+        needToMeetFarmerOrPilot: "Você precisa conhecer A Agricultora ou o Piloto primeiro!",
+        needToMeetAllFriends: "Você precisa conhecer todos os outros amigos primeiro!",
+        gotIt: "Entendi!",
+        finishAdventure: "Finalizar Aventura!",
+        playVideo: "Reproduzir Vídeo",
+        thinking: "💭 pensando...",
+        
+        // Button states
+        startButtonText: "Começar Aventura!",
+        chooseNameText: "Escolha seu nome e personagem"
+    },
+    en: {
+        // Main page
+        gameTitle: "🌟 Discovering the Sun 🌟",
+        gameSubtitle: "Let's create your solar adventure!",
+        nameQuestion: "What's your name?",
+        namePlaceholder: "Type your name here...",
+        characterQuestion: "Choose your character:",
+        startAdventure: "Start Adventure!",
+        chooseNameAndCharacter: "Choose your name and character",
+        
+        // Character selection
+        chooseFriend: "Choose a friend to meet!",
+        friendDescription: "Click on one of Uncle João's friends to discover how they use the sun! 🌟",
+        backButton: "Back",
+        
+        // Transition
+        transitionTitle: "Meeting the Friends...",
+        transitionSubtitle: "Preparing the amazing conversations!",
+        
+        // Final screen
+        congratulations: "Congratulations!",
+        completedAdventure: "You completed the solar adventure!",
+        friendsTitle: "Your Friends Met:",
+        playAgain: "Play Again!",
+        
+        // Character names
+        uncleJoao: "Uncle João",
+        rosa: "Rosa",
+        carlos: "Carlos",
+        nivaldo: "Nivaldo",
+        lucia: "Lúcia",
+        
+        // Character titles
+        theFarmer: "The Farmer",
+        thePilot: "The Pilot",
+        theOperator: "The Operator",
+        theAstronaut: "The Astronaut",
+        
+        // Messages
+        needToMeetFarmerOrPilot: "You need to meet The Farmer or The Pilot first!",
+        needToMeetAllFriends: "You need to meet all the other friends first!",
+        gotIt: "Take care!",
+        finishAdventure: "Finish Adventure!",
+        playVideo: "Play Video",
+        thinking: "💭 thinking...",
+        
+        // Button states
+        startButtonText: "Start Adventure!",
+        chooseNameText: "Choose your name and character"
+    }
+};
+
+// Language management functions
+function setLanguage(lang) {
+    currentLanguage = lang;
+    localStorage.setItem('gameLanguage', lang);
+    updateLanguageUI();
+    updateAllTexts();
+}
+
+function updateLanguageUI() {
+    const langPt = document.getElementById('langPt');
+    const langEn = document.getElementById('langEn');
+    
+    if (langPt && langEn) {
+        langPt.classList.toggle('active', currentLanguage === 'pt');
+        langEn.classList.toggle('active', currentLanguage === 'en');
+    }
+}
+
+function updateAllTexts() {
+    const t = translations[currentLanguage];
+    
+    // Clear dialogue cache when language changes
+    dialogueCache = {};
+    
+    // Update main page elements
+    updateElement('gameTitle', t.gameTitle);
+    updateElement('gameSubtitle', t.gameSubtitle);
+    updateElement('nameQuestion', t.nameQuestion);
+    updateElement('characterQuestion', t.characterQuestion);
+    updateElement('chooseFriendText', t.chooseFriend);
+    updateElement('friendDescription', t.friendDescription);
+    updateElement('backButtonText', t.backButton);
+    updateElement('transitionTitle', t.transitionTitle);
+    updateElement('transitionSubtitle', t.transitionSubtitle);
+    updateElement('congratulationsTitle', t.congratulations);
+    updateElement('congratulationsSubtitle', t.completedAdventure);
+    updateElement('friendsTitle', t.friendsTitle);
+    updateElement('playAgainText', t.playAgain);
+    
+    // Update input placeholder
+    const nameInput = document.getElementById('playerName');
+    if (nameInput) {
+        nameInput.placeholder = t.namePlaceholder;
+    }
+    
+    // Update character names in characterNames object
+    characterNames.tio = t.uncleJoao;
+    characterNames.agricultor = t.rosa;
+    characterNames.piloto = t.carlos;
+    characterNames.operador = t.nivaldo;
+    characterNames.astronauta = t.lucia;
+    
+    // Update start button
+    updateStartButton();
+}
+
+function updateElement(id, text) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.textContent = text;
+    }
+}
+
+// Load saved language preference
+function loadLanguagePreference() {
+    const savedLang = localStorage.getItem('gameLanguage');
+    if (savedLang && (savedLang === 'pt' || savedLang === 'en')) {
+        currentLanguage = savedLang;
+    }
+    updateLanguageUI();
+    updateAllTexts();
+}
+
+// Dialogue system
 let currentDialogue = 0;
 let currentDialogueData = [];
 let isTyping = false;
-let dialogueCache = {}; // Cache para armazenar diálogos carregados
+let dialogueCache = {}; // Cache to store loaded dialogues
 
-// Função para carregar diálogos de arquivos JS
+// Function to load dialogues from JS files
 function loadDialogues(character) {
-    // Verificar se já está no cache
+    // Check if already in cache
     if (dialogueCache[character]) {
         return dialogueCache[character];
     }
     
-    // Mapear personagens para suas variáveis globais
+    // Map characters to their language-specific global variables
     const dialogueVariables = {
-        'tio': window.tioJoaoDialogues,
-        'agricultor': window.agricultorDialogues,
-        'piloto': window.pilotoDialogues,
-        'operador': window.operadorDialogues,
-        'astronauta': window.astronautaDialogues
+        'tio': currentLanguage === 'pt' ? window.tioJoaoDialoguesPT : window.tioJoaoDialoguesEN,
+        'agricultor': currentLanguage === 'pt' ? window.agricultorDialoguesPT : window.agricultorDialoguesEN,
+        'piloto': currentLanguage === 'pt' ? window.pilotoDialoguesPT : window.pilotoDialoguesEN,
+        'operador': currentLanguage === 'pt' ? window.operadorDialoguesPT : window.operadorDialoguesEN,
+        'astronauta': currentLanguage === 'pt' ? window.astronautaDialoguesPT : window.astronautaDialoguesEN
     };
     
     let dialogueData = dialogueVariables[character];
+    
     
     if (!dialogueData) {
         dialogueData = getFallbackDialogues(character);
     }
     
-    // Processar diálogos
+    // Process dialogues
     const processedDialogues = dialogueData.map(dialogue => {
         const processedDialogue = {
             ...dialogue,
-            speaker: dialogue.npc ? characterNames[character] || 'Personagem' : (playerName || 'Jogador'),
+            speaker: dialogue.npc ? characterNames[character] || 'Character' : (playerName || 'Player'),
             isPlayer: !dialogue.npc
         };
         
-        // Só processar text se existir
+        // Only process text if it exists
         if (dialogue.text) {
             processedDialogue.text = dialogue.text
-                .replace(/%playerName%/g, playerName || 'Jogador')
-                .replace(/Lucas/g, playerName || 'Jogador');
+                .replace(/%playerName%/g, playerName || 'Player')
+                .replace(/Lucas/g, playerName || 'Player');
         }
         
         return processedDialogue;
     });
     
-    // Armazenar no cache
+    // Store in cache
     dialogueCache[character] = processedDialogues;
     
     return processedDialogues;
 }
 
-// Diálogos de fallback caso não consiga carregar os arquivos
+// Fallback dialogues in case files can't be loaded
 function getFallbackDialogues(character) {
     const fallbackDialogues = {
         'tio': [
             {
                 npc: true,
-                text: '💭 pensando...'
+                text: translations[currentLanguage].thinking
             }
         ],
         'agricultor': [
             {
                 npc: true,
-                text: '💭 pensando...'
+                text: translations[currentLanguage].thinking
             }
         ],
         'piloto': [
             {
                 npc: true,
-                text: '💭 pensando...'
+                text: translations[currentLanguage].thinking
             }
         ],
         'operador': [
             {
                 npc: true,
-                text: '💭 pensando...'
+                text: translations[currentLanguage].thinking
             }
         ],
         'astronauta': [
             {
                 npc: true,
-                text: '💭 pensando...'
+                text: translations[currentLanguage].thinking
             }
         ]
     };
@@ -102,16 +283,16 @@ function getFallbackDialogues(character) {
     return fallbackDialogues[character] || fallbackDialogues['tio'];
 }
 
-// Mapeamento de nomes dos personagens
+// Character names mapping
 const characterNames = {
-    'tio': 'Tio João',
+    'tio': 'Uncle João',
     'agricultor': 'Rosa',
     'piloto': 'Carlos',
     'operador': 'Nivaldo',
     'astronauta': 'Lúcia'
 };
 
-// Mapeamento de imagens
+// Image mapping
 const characterImages = {
     'curioso': 'shared/assets/bodies/pj1.png',
     'aventureiro': 'shared/assets/bodies/pj2.png',
@@ -132,25 +313,28 @@ const characterHeadImages = {
 };
 
 // ========================================
-// INICIALIZAÇÃO
+// INITIALIZATION
 // ========================================
 document.addEventListener('DOMContentLoaded', function() {
     initializeGame();
 });
     
 function initializeGame() {
-    // Esconder todas as telas exceto personalização
+    // Load language preference first
+    loadLanguagePreference();
+    
+    // Hide all screens except personalization
     const screens = document.querySelectorAll('.screen');
     screens.forEach(screen => {
         screen.classList.toggle('hidden', screen.id !== 'personalizacao');
     });
     
-    // Configurar eventos
+    // Setup events
     setupPersonalizationEvents();
 }
 
 // ========================================
-// SISTEMA DE PERSONALIZAÇÃO
+// PERSONALIZATION SYSTEM
 // ========================================
 function setupPersonalizationEvents() {
     const playerNameInput = document.getElementById('playerName');
@@ -200,24 +384,25 @@ function updateStartButton() {
     const isValid = playerName && selectedCharacter;
     startBtn.disabled = !isValid;
     
+    const t = translations[currentLanguage];
     if (isValid) {
-        startBtn.innerHTML = `<i class="fas fa-play"></i> Começar Aventura!`;
+        startBtn.innerHTML = `<i class="fas fa-play"></i> <span id="startButtonText">${t.startButtonText}</span>`;
     } else {
-        startBtn.innerHTML = `<i class="fas fa-play"></i> Escolha seu nome e personagem`;
+        startBtn.innerHTML = `<i class="fas fa-play"></i> <span id="startButtonText">${t.chooseNameText}</span>`;
     }
 }
 
 // ========================================
-// SISTEMA DE NAVEGAÇÃO
+// NAVIGATION SYSTEM
 // ========================================
 function showScreen(screenId) {
     
-    // Esconder todas as telas
+    // Hide all screens
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.add('hidden');
     });
     
-    // Mostrar tela atual
+    // Show current screen
     const targetScreen = document.getElementById(screenId);
     if (targetScreen) {
         targetScreen.classList.remove('hidden');
@@ -227,25 +412,25 @@ function showScreen(screenId) {
 }
 
 // ========================================
-// SISTEMA DE AVENTURA
+// ADVENTURE SYSTEM
 // ========================================
 function iniciarAventura() {
-    // Verificar se o nome foi definido
+    // Check if name was defined
     if (!playerName) {
         return;
     }
     
-    // Resetar estado
+    // Reset state
     visitedCharacters = [];
     conversationCompleted = false;
     
-    // Configurar diálogos do Tio João
+    // Setup Uncle João's dialogues
     setupDialogueData('tio');
     
-    // Mostrar tela de história
+    // Show story screen
     showScreen('historia');
     
-    // Iniciar diálogo após transição com delay maior
+    // Start dialogue after transition with longer delay
     setTimeout(() => {
         startCinematicDialogue();
     }, 800);
@@ -253,36 +438,36 @@ function iniciarAventura() {
 
 function conhecerAmigos() {
     
-    // Mostrar tela de transição
+    // Show transition screen
     showScreen('transicao');
     
-    // Carregar NPCs em background
+    // Load NPCs in background
     setTimeout(() => {
         updateCharacterCards();
     showScreen('escolhaPersonagem');
-    }, 2000); // 2 segundos de transição
+    }, 2000); // 2 seconds transition
 }
 
 // ========================================
-// SISTEMA DE CONVERSAS
+// CONVERSATION SYSTEM
 // ========================================
 function conversarComPersonagem(personagem) {
     
-    // Resetar estado da conversa
+    // Reset conversation state
     conversationCompleted = false;
     
-    // Verificar se pode conversar
+    // Check if can talk
     if (!canTalkToCharacter(personagem)) {
             return;
     }
     
-    // NÃO adicionar à lista de visitados ainda - só após clicar "Entendi!"
+    // DON'T add to visited list yet - only after clicking "Take care!"
     
-    // Configurar diálogos
+    // Setup dialogues
     setupDialogueData(personagem);
     updatePlayerCharacterImage();
     
-    // Mostrar tela de conversa
+    // Show conversation screen
     const screenMap = {
         'tio': 'historia',
         'agricultor': 'conversandoAgricultor',
@@ -295,7 +480,7 @@ function conversarComPersonagem(personagem) {
     if (targetScreen) {
         showScreen(targetScreen);
         
-        // Iniciar diálogo após transição com delay maior para carregamento
+        // Start dialogue after transition with longer delay for loading
         setTimeout(() => {
             startCinematicDialogue();
         }, 800);
@@ -338,7 +523,8 @@ function canTalkToCharacter(personagem) {
     if (personagem === 'operador') {
         const hasTalkedToFirst = visitedCharacters.includes('agricultor') || visitedCharacters.includes('piloto');
         if (!hasTalkedToFirst) {
-            showMessage('Você precisa conhecer A Agricultora ou o Piloto primeiro!', 'warning');
+            const t = translations[currentLanguage];
+            showMessage(t.needToMeetFarmerOrPilot, 'warning');
             return false;
         }
         return true;
@@ -350,7 +536,8 @@ function canTalkToCharacter(personagem) {
         const hasTalkedToAll = requiredCharacters.every(char => visitedCharacters.includes(char));
         
         if (!hasTalkedToAll) {
-            showMessage('Você precisa conhecer todos os outros amigos primeiro!', 'warning');
+            const t = translations[currentLanguage];
+            showMessage(t.needToMeetAllFriends, 'warning');
             return false;
         }
         return true;
@@ -368,12 +555,13 @@ function updateCharacterCards() {
     // Limpar grid
     charactersGrid.innerHTML = '';
     
-    // Definir personagens
+    // Define characters
+    const t = translations[currentLanguage];
     const characters = [
-        { id: 'agricultor', name: 'Rosa', title: 'A Agricultora', icon: 'fas fa-seedling', emoji: '🌱', phase: 1, requirements: [] },
-        { id: 'piloto', name: 'Carlos', title: 'O Piloto', icon: 'fas fa-plane', emoji: '✈️', phase: 1, requirements: [] },
-        { id: 'operador', name: 'Nivaldo', title: 'O Operador', icon: 'fas fa-bolt', emoji: '⚡', phase: 2, requirements: ['agricultor', 'piloto'] },
-        { id: 'astronauta', name: 'Lúcia', title: 'A Astronauta', icon: 'fas fa-rocket', emoji: '🚀', phase: 3, requirements: ['agricultor', 'piloto', 'operador'] }
+        { id: 'agricultor', name: t.rosa, title: t.theFarmer, icon: 'fas fa-seedling', emoji: '🌱', phase: 1, requirements: [] },
+        { id: 'piloto', name: t.carlos, title: t.thePilot, icon: 'fas fa-plane', emoji: '✈️', phase: 1, requirements: [] },
+        { id: 'operador', name: t.nivaldo, title: t.theOperator, icon: 'fas fa-bolt', emoji: '⚡', phase: 2, requirements: ['agricultor', 'piloto'] },
+        { id: 'astronauta', name: t.lucia, title: t.theAstronaut, icon: 'fas fa-rocket', emoji: '🚀', phase: 3, requirements: ['agricultor', 'piloto', 'operador'] }
     ];
     
     // Filtrar personagens disponíveis
@@ -480,16 +668,17 @@ function startCinematicDialogue() {
         const currentScreenElement = document.querySelector('.screen:not(.hidden)');
         const continueBtn = currentScreenElement ? currentScreenElement.querySelector('#continueBtn') : null;
     
-    if (continueBtn) {
+        if (continueBtn) {
             if (currentDialogueData.length > 1) {
-                // Há mais diálogos - mostrar flechinha
+                // There are more dialogues - show arrow
                 continueBtn.innerHTML = '<i class="fas fa-arrow-right"></i>';
                 continueBtn.onclick = nextDialogue;
         } else {
-                    // Último diálogo - mostrar mãos dadas
-                    continueBtn.innerHTML = '<i class="fas fa-handshake"></i> Entendi!';
-                    continueBtn.onclick = endDialogue;
-            }
+            // Last dialogue - show handshake
+            const t = translations[currentLanguage];
+            continueBtn.innerHTML = `<i class="fas fa-handshake"></i> ${t.gotIt}`;
+            continueBtn.onclick = endDialogue;
+        }
         }
     }, 100);
 }
@@ -565,7 +754,8 @@ function showMediaInDialogue(mediaDialogue, currentScreenElement) {
                     // Ativar o botão de continuar quando o vídeo carregar
                     if (continueBtn) {
                         continueBtn.style.display = 'block';
-                        continueBtn.innerHTML = '<i class="fas fa-play"></i> Reproduzir Vídeo';
+                        const t = translations[currentLanguage];
+                        continueBtn.innerHTML = `<i class="fas fa-play"></i> ${t.playVideo}`;
                         continueBtn.onclick = () => {
                             mediaElement.play();
                             continueBtn.innerHTML = '<i class="fas fa-arrow-right"></i>';
@@ -729,7 +919,7 @@ function nextDialogue() {
     currentDialogue++;
     
     if (currentDialogue < currentDialogueData.length) {
-        // Ainda há mais diálogos - mostrar flechinha
+        // There are still more dialogues - show arrow
         const currentScreenElement = document.querySelector('.screen:not(.hidden)');
         const continueBtn = currentScreenElement ? currentScreenElement.querySelector('#continueBtn') : null;
         
@@ -743,7 +933,7 @@ function nextDialogue() {
         showDialogue(currentDialogueData[currentDialogue]);
         }, 50);
     } else {
-        // Fim da conversa - mostrar mãos dadas
+        // End of conversation - show handshake
         endDialogue();
     }
 }
@@ -753,26 +943,27 @@ function endDialogue() {
     const continueBtn = currentScreenElement ? currentScreenElement.querySelector('#continueBtn') : null;
     
     if (continueBtn) {
+        const t = translations[currentLanguage];
         if (currentScreenElement.id === 'conversandoAstronauta') {
-            // Astronauta - finalizar aventura
-            continueBtn.innerHTML = '<i class="fas fa-star"></i> Finalizar Aventura!';
+            // Astronaut - finish adventure
+            continueBtn.innerHTML = `<i class="fas fa-star"></i> ${t.finishAdventure}`;
             continueBtn.onclick = finalizarAventura;
         } else if (currentScreenElement.id === 'historia') {
-            // Tio João - transição automática
+            // Uncle João - automatic transition
             setTimeout(() => {
                 conhecerAmigos();
             }, 1000);
         } else {
-            // Outros personagens - mãos dadas para entender
-            continueBtn.innerHTML = '<i class="fas fa-handshake"></i> Entendi!';
+            // Other characters - handshake to understand
+            continueBtn.innerHTML = `<i class="fas fa-handshake"></i> ${t.gotIt}`;
             continueBtn.onclick = function() {
-                // Adicionar personagem à lista de visitados APENAS quando clicar em "Entendi!"
+                // Add character to visited list ONLY when clicking "Take care!"
                 const currentPersonagem = getCurrentPersonagem();
                 if (currentPersonagem && !visitedCharacters.includes(currentPersonagem)) {
                     visitedCharacters.push(currentPersonagem);
                 }
                 
-                // Marcar conversa como completada
+                // Mark conversation as completed
                 conversationCompleted = true;
                 voltarEscolha();
             };
@@ -915,7 +1106,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ========================================
-// EXPORTAÇÕES GLOBAIS
+// GLOBAL EXPORTS
 // ========================================
 window.selectCharacter = selectCharacter;
 window.iniciarAventura = iniciarAventura;
@@ -925,3 +1116,4 @@ window.voltarHistoria = voltarHistoria;
 window.nextDialogue = nextDialogue;
 window.finalizarAventura = finalizarAventura;
 window.reiniciarAventura = reiniciarAventura;
+window.setLanguage = setLanguage;

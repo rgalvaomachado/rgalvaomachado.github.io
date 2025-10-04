@@ -1,5 +1,5 @@
-// Diálogos dA Agricultora (Rosa)
-const agricultorDialogues = [
+// Dialogues of The Farmer (Rosa) - Portuguese
+const agricultorDialoguesPT = [
     {
         npc: false,
         text: "Oi, Rosa! Tudo bem? Ouvi dizer que o Sol anda fazendo umas travessuras lá no céu e que isso pode afetar o seu trabalho"
@@ -19,7 +19,7 @@ const agricultorDialogues = [
     },
     {
         npc: true,
-        text: "Na verdade, além da projeção de luzes, em uma tempestade solar o Sol também solta uma espécie de ‘bola de gás quente’ chamada Ejeção de Massa Coronal, ou EMC. É como se o Sol jogasse para o espaço um monte de gás brilhante cheio de energia!"
+        text: "Na verdade, além da projeção de luzes, em uma tempestade solar o Sol também solta uma espécie de 'bola de gás quente' chamada Ejeção de Massa Coronal, ou EMC. É como se o Sol jogasse para o espaço um monte de gás brilhante cheio de energia!"
     },
     {
         npc: false,
@@ -35,7 +35,47 @@ const agricultorDialogues = [
        }
 ];
 
-// Exportar para uso global
+// Dialogues of The Farmer (Rosa) - English
+const agricultorDialoguesEN = [
+    {
+        npc: false,
+        text: "Hi, Rosa! How are you? I heard that the Sun is doing some mischief up in the sky and that this might affect your work"
+    },
+    {
+        npc: true,
+        text: "Hi %playerName%! Yes, some solar events confuse the GPS signals of my tractors. When this happens, I get lost in the middle of the field and need to adjust everything manually"
+    },
+    {
+        type: "html",
+        media: "characters/agricultor/assets/html/desafio.html",
+        caption: "Agriculture Challenge"
+    },
+    {
+        npc: false,
+        text: "Wow, so those beautiful lights in the sky can mess up your work down here?"
+    },
+    {
+        npc: true,
+        text: "Actually, besides the light projection, during a solar storm the Sun also releases a kind of 'hot gas ball' called Coronal Mass Ejection, or CME. It's like the Sun throwing a bunch of bright energy-filled gas into space!"
+    },
+    {
+        npc: false,
+        text: "How interesting! And how do you find out when a solar storm is coming?"
+    },
+    {
+        npc: true,
+        text: "Oh, we follow news and alerts from NASA scientists. They warn us when a big coronal mass ejection is coming, so I prepare everything before turning on the tractors"
+    },
+    {
+        npc: false,
+        text: "Wow, it's incredible how the Sun can influence so many things on Earth! Thanks for telling me, Rosa!"
+       }
+];
+
+// Export for global use
 if (typeof window !== 'undefined') {
-    window.agricultorDialogues = agricultorDialogues;
+    window.agricultorDialoguesPT = agricultorDialoguesPT;
+    window.agricultorDialoguesEN = agricultorDialoguesEN;
+    // Keep backward compatibility
+    window.agricultorDialogues = agricultorDialoguesEN;
 }

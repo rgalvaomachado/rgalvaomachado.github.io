@@ -439,9 +439,9 @@ body {
     margin-bottom: 1rem;
 }
 
-/* Estilos da barra de progresso removidos - não são mais necessários */
+/* Progress bar styles removed - no longer needed */
 
-/* Estilos da tela final cinematográfica */
+/* Final cinematic screen styles */
 .final-actions {
     position: absolute;
     bottom: 0;
@@ -524,7 +524,7 @@ body {
     to { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px #FFD700, 0 0 30px #FFD700; }
 }
 
-/* Tela de Transição */
+/* Transition Screen */
 .transition-container {
     position: relative;
     width: 100%;
@@ -800,7 +800,44 @@ body {
     transform: translateY(0);
 }
 
-/* Estilos da tela de personalização */
+/* Language Selector */
+.language-selector {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.lang-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #FF6B35;
+    border-radius: 25px;
+    padding: 8px 16px;
+    font-family: 'Fredoka', cursive;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #333;
+    backdrop-filter: blur(10px);
+}
+
+.lang-btn:hover {
+    background: #FF6B35;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+}
+
+.lang-btn.active {
+    background: #FF6B35;
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+}
+
+/* Personalization screen styles */
 .personalization-content {
     text-align: center;
     max-width: 800px;
@@ -1180,10 +1217,10 @@ body {
     background: radial-gradient(circle, #FFD700 0%, #FF6B35 50%, #FF4500 100%);
     border-radius: 50%;
     box-shadow: 0 0 50px #FF6B35, 0 0 100px #FF6B35;
-    /* Animação removida */
+    /* Animation removed */
 }
 
-/* Animação do sol removida */
+/* Sun animation removed */
 
 .farm-elements {
     position: absolute;
@@ -1395,7 +1432,7 @@ body {
     100% { transform: translateX(100%); }
 }
 
-/* Elementos do Espaço */
+/* Space Elements */
 .space-elements {
     position: absolute;
     bottom: 0;
@@ -2003,7 +2040,7 @@ body {
     filter: blur(5px);
 }
 
-/* Sistema de Diálogos Cinematográficos */
+/* Cinematic Dialogue System */
 .cinematic-dialogue-system {
     position: absolute;
     bottom: 0;
@@ -2149,7 +2186,7 @@ body {
     font-size: 0.8rem;
 }
 
-/* Remover animação de digitação problemática */
+/* Remove problematic typing animation */
 
 .dialogue-controls {
     display: flex;
@@ -2202,9 +2239,9 @@ body {
     box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
 }
 
-/* Estilos de progresso removidos - bolinhas não são mais usadas */
+/* Progress styles removed - dots are no longer used */
 
-/* Estilos para emojis removidos - usando imagens reais */
+/* Emoji styles removed - using real images */
 
 .exit-dialogue {
     position: absolute;
@@ -2353,7 +2390,7 @@ body {
     flex-shrink: 0 !important;
 }
 
-/* Forçar o mesmo tamanho do player para o operador */
+/* Force same size as player for operator */
 .character-spotlight .npc-avatar.operador,
 .character-spotlight .npc-avatar-cinematic.operador {
     transform: scale(1) !important;
@@ -2370,14 +2407,14 @@ body {
     perspective: 1000px !important;
 }
 
-/* Garantir que o operador não fique mais à frente */
+/* Ensure operator doesn't stay in front */
 .character-spotlight .npc-avatar.operador,
 .character-spotlight .npc-avatar-cinematic.operador {
     transform: scale(1) translateZ(0) !important;
     will-change: auto !important;
 }
 
-/* Garantir que o operador tenha a mesma posição dos outros NPCs */
+/* Ensure operator has same position as other NPCs */
 .character-spotlight .npc-avatar.operador,
 .character-spotlight .npc-avatar-cinematic.operador {
     margin: 0 !important;
@@ -2387,7 +2424,7 @@ body {
     box-shadow: none !important;
 }
 
-/* Resetar qualquer transformação 3D que possa estar causando o problema */
+/* Reset any 3D transformation that might be causing the problem */
 .character-spotlight .npc-avatar.operador,
 .character-spotlight .npc-avatar-cinematic.operador {
     transform: none !important;

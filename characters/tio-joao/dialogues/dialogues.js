@@ -1,5 +1,5 @@
-// Diálogos do Tio João
-const tioJoaoDialogues = [
+// Dialogues of Uncle João - Portuguese
+const tioJoaoDialoguesPT = [
     {
         npc: false,
         text: "Tio, você já viu aquele meme do Sol vomitando na Terra? Eu vejo ele toda hora e sempre dou muita risada!"
@@ -27,7 +27,7 @@ const tioJoaoDialogues = [
     },
     {
         npc: true,
-        text: "hahaha mais ou menos! Na verdade, esse “vômito” é uma brincadeira com um fenômeno real chamado tempestade solar. Às vezes, o Sol solta um monte de energia e partículas no espaço"
+        text: "hahaha mais ou menos! Na verdade, esse 'vômito' é uma brincadeira com um fenômeno real chamado tempestade solar. Às vezes, o Sol solta um monte de energia e partículas no espaço"
     },
     {
         npc: false,
@@ -48,7 +48,7 @@ const tioJoaoDialogues = [
     },
     {
         npc: true,
-        text: "Exatamente! E essa “arte” é só uma parte de tudo que acontece por lá. Sabe, várias pessoas na Terra são influenciadas por esses eventos, desde cientistas que estudam o Sol, pilotos de avião e até astronautas no espaço"
+        text: "Exatamente! E essa 'arte' é só uma parte de tudo que acontece por lá. Sabe, várias pessoas na Terra são influenciadas por esses eventos, desde cientistas que estudam o Sol, pilotos de avião e até astronautas no espaço"
     },
     {
         npc: false,
@@ -60,7 +60,7 @@ const tioJoaoDialogues = [
     },
     {
         npc: false,
-        text: "Nossa, seria muito legal! Quero descobrir tudo sobre como o Sol faz a sua “arte” lá no céu!"
+        text: "Nossa, seria muito legal! Quero descobrir tudo sobre como o Sol faz a sua 'arte' lá no céu!"
     },
     {
         npc: true,
@@ -68,7 +68,80 @@ const tioJoaoDialogues = [
     }
 ];
 
-// Exportar para uso global
+// Dialogues of Uncle João - English
+const tioJoaoDialoguesEN = [
+    {
+        npc: false,
+        text: "Uncle, have you seen that meme of the Sun vomiting on Earth? I see it all the time and always laugh a lot!"
+    },
+    {
+        npc: true,
+        text: "I don't know if I've seen it, show me"
+    },
+    {
+        npc: false,
+        text: "Here, look"
+    },
+    {
+        type: "image",
+        media: "characters/tio-joao/assets/img/image.png",
+        caption: "Meme of the Sun 'vomiting' on Earth"
+    },
+    {
+        npc: true,
+        text: "HAHAHA I loved it! But do you really know what's happening?"
+    },
+    {
+        npc: false,
+        text: "Hmm... is the Sun feeling sick like Aunt Suzana at the beach?"
+    },
+    {
+        npc: true,
+        text: "hahaha more or less! Actually, this 'vomit' is a joke about a real phenomenon called solar storm. Sometimes, the Sun releases a lot of energy and particles into space"
+    },
+    {
+        npc: false,
+        text: "And does that reach Earth?"
+    },
+    {
+        npc: true,
+        text: "Sometimes yes! When these particles get here, they collide with the air up high in the sky, and that creates auroras, those beautiful colored lights that appear near the poles"
+    },
+    {
+        type: "html",
+        media: "characters/tio-joao/assets/html/desafio.html",
+        caption: "Uncle João Challenge"
+    },
+    {
+        npc: false,
+        text: "Ahhhh, so the Sun isn't sick! It's just making art in the sky!"
+    },
+    {
+        npc: true,
+        text: "Exactly! And this 'art' is just one part of everything that happens up there. You know, many people on Earth are influenced by these events, from scientists who study the Sun, airplane pilots and even astronauts in space"
+    },
+    {
+        npc: false,
+        text: "Wow, really?"
+    },
+    {
+        npc: true,
+        text: "Yes! How about you go talk to some of them? Ask what they know about these solar events, how it affects their daily lives... you'll learn a lot of incredible things!"
+    },
+    {
+        npc: false,
+        text: "Wow, that would be really cool! I want to discover everything about how the Sun makes its 'art' up in the sky!"
+    },
+    {
+        npc: true,
+        text: "Then go ahead! And then tell me everything you discovered, deal?"
+    }
+];
+
+// Export for global use
 if (typeof window !== 'undefined') {
-    window.tioJoaoDialogues = tioJoaoDialogues;
+    window.tioJoaoDialoguesPT = tioJoaoDialoguesPT;
+    window.tioJoaoDialoguesEN = tioJoaoDialoguesEN;
+    // Keep backward compatibility
+    window.tioJoaoDialogues = tioJoaoDialoguesEN;
 }
