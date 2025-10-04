@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Desafio do Eletricista ⚡ Conecte os Fios</title>
+<style>
+  :root{ --painel:#2f2f33; --borda:#555; --bg:#0e1117; }
+  *{ box-sizing:border-box }
+  html,body{ height:100% }
+  body{
+    margin:0; background:radial-gradient(1200px 600px at 50% 15%, #1b1f2a 0%, var(--bg) 60%, #000 100%);
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    user-select:none; -webkit-user-select:none; -ms-user-select:none;
+  }
+  .wrap{ width:min(96vw, 900px); }
+  h1{ margin:0 0 10px; text-align:center; font-size:clamp(18px,3.4vw,28px) }
+  .painel{
+    position:relative; background:linear-gradient(#2f2f33,#2a2a2e); border:4px solid var(--borda); border-radius:14px;
+    padding:28px 64px; display:flex; justify-content:space-between; align-items:center; gap:24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 0 40px rgba(0,0,0,.35); touch-action:none;
+    min-height:380px;
+  }
+  .coluna{ display:flex; flex-direction:column; justify-content:space-between; height:100%; gap:22px; position:relative; z-index:2 }
+  .fio-socket{ width:56px; height:56px; border-radius:50%; border:3px solid #000; background:#111;
+    box-shadow: inset 0 4px 10px rgba(0,0,0,.6), 0 0 0 2px rgba(255,255,255,.08);
+    display:grid; place-items:center; position:relative;
+  }
+  .fio-end{ width:40px; height:40px; border-radius:50%; cursor:pointer; position:relative; z-index:3;
+    box-shadow: 0 0 12px rgba(0,0,0,.5); transition: transform .12s ease; will-change: transform;
+  }
+  .fio-end:active{ transform:scale(1.06) }
+  canvas{ position:absolute; inset:0; pointer-events:none; z-index:1 }
+  .hud-bottom{
+    position: absolute; left:0; right:0; bottom:0; display:flex; justify-content:center; gap:10px; padding:10px;
+    background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.30)); z-index:5;
+  }
+  .btn{ background:#29b6f6; color:#000; border:none; padding:10px 16px; border-radius:8px; font-weight:700; cursor:pointer;
+    box-shadow:0 6px 14px rgba(0,0,0,.3) }
+  .btn.secondary{ background:#8bc34a; }
+  .btn.warn{ background:#ffcc80; color:#3b2a00 }
+  #mensagem{ text-align:center; margin-top:10px; min-height:22px }
+  /* Finalizar/Reiniciar dinâmico */
+  .floating-btn{ position:absolute; bottom:64px; left:50%; transform:translateX(-50%); z-index:6 }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Desafio do Eletricista ⚡ Conecte os Fios</h1>
+    <div class="painel" id="painel">
+      <div class="coluna" id="col-esq"></div>
+      <canvas id="cv"></canvas>
+      <div class="coluna" id="col-dir"></div>
+
+      <div class="hud-bottom">
+        <button class="btn" id="reiniciar">🔄 Reiniciar</button>
+      </div>
+    </div>
+    <div id="mensagem"></div>
+  </div>
+
+<script>
+const CORES = [
+  {name:'vermelho', css:'#ff4c4c'},
+  {name:'azul',     css:'#42a5f5'},
+  {name:'amarelo',  css:'#ffeb3b'},
+  {name:'verde',    css:'#66bb6a'}
+];
+
+const painel = document.getElementById('painel');
+const colE   = document.getElementById('col-esq');
+const colD   = document.getElementById('col-dir');
+const cv     = document.getElementById('cv');
+const ctx    = cv.getContext('2d');
+const msg    = document.getElementById('mensagem');
+
+let leftEnds = [], rightEnds = [], connections = [];
+let dragging = null, activePointer = null;
+let btnFinalizar = null;
+
+function sizeCanvas(){ cv.width = painel.clientWidth; cv.height = painel.clientHeight; redrawAll(); }
+window.addEventListener('resize', sizeCanvas);
+
+function resetUI(){
+  clearFloating();
+  msg.textContent = 'Arraste de qualquer lado conectando as cores certas.';
+}
+
+function clearFloating(){
+  if(btnFinalizar){ btnFinalizar.remove(); btnFinalizar = null; }
+}
+
+function createSockets(){
+  colE.innerHTML = ''; colD.innerHTML=''; connections=[]; leftEnds=[]; rightEnds=[];
+  resetUI(); ctx.clearRect(0,0,cv.width,cv.height);
+
+  const shuffledRight = [...CORES].sort(()=>Math.random()-.5);
+
+  // Esquerda: fios soltos
+  CORES.forEach(c=>{
+    const sock = document.createElement('div'); sock.className='fio-socket';
+    const end  = document.createElement('div'); end.className='fio-end'; end.style.background=c.css; end.dataset.color=c.css; end.title=c.name;
+
+    sock.appendChild(end);
+    colE.appendChild(sock);
+    leftEnds.push(end);
+  });
+
+  // Direita: apenas conectores
+  shuffledRight.forEach(c=>{
+    const sock = document.createElement('div'); sock.className='fio-socket';
+    const end  = document.createElement('div'); end.className='fio-end'; end.style.background=c.css; end.dataset.color=c.css; end.title=c.name;
+    sock.appendChild(end);
+    colD.appendChild(sock);
+    rightEnds.push(end);
+  });
+
+  // Listeners
+  leftEnds.forEach(end=>{
+    end.addEventListener('pointerdown', startDrag);
+  });
+  rightEnds.forEach(end=>{
+    end.addEventListener('pointerdown', startDrag);
+  });
+  document.addEventListener('pointermove', onDrag, {passive:false});
+  document.addEventListener('pointerup', endDrag, {passive:false});
+
+  sizeCanvas();
+}
+
+function centerOf(el){
+  const r = el.getBoundingClientRect(), pr = painel.getBoundingClientRect();
+  return { x: r.left - pr.left + r.width/2, y: r.top - pr.top + r.height/2 };
+}
+
+function startDrag(e){
+  e.preventDefault();
+  if (isEndUsed(e.currentTarget)) return; // não permite arrastar já conectado
+  dragging = { from: e.currentTarget, color: e.currentTarget.dataset.color };
+  activePointer = e.pointerId;
+  e.currentTarget.setPointerCapture(activePointer);
+
+  drawDrag(centerOf(dragging.from), mouseToPanel(e));
+}
+
+function onDrag(e){
+  if(!dragging || e.pointerId !== activePointer) return;
+  e.preventDefault();
+  drawDrag(centerOf(dragging.from), mouseToPanel(e));
+}
+
+function endDrag(e){
+  if(!dragging || e.pointerId !== activePointer) return;
+  e.preventDefault();
+
+  const drop = document.elementFromPoint(e.clientX, e.clientY);
+  // Determine which side we started on and choose candidates on the opposite side
+  const fromSide = leftEnds.includes(dragging.from) ? 'left' : (rightEnds.includes(dragging.from) ? 'right' : null);
+  const candidates = fromSide === 'left' ? rightEnds : leftEnds;
+  const target = candidates.find(r => r === drop || r.contains(drop));
+
+  const from = dragging.from;
+  if (target && target.dataset.color === dragging.color && !isEndUsed(target) && !isEndUsed(from)){
+    // Conexão correta
+    connections.push({ from, to: target, color: dragging.color });
+    from.style.pointerEvents = 'none'; target.style.pointerEvents = 'none';
+
+    redrawAll();
+    msg.textContent = '✅ Conectado!';
+
+    if (connections.length === CORES.length) {
+      msg.textContent = '🎉 Todos conectados! Energia restaurada!';
+      showFinish();
+    }
+  } else {
+    // Falha: shake + retoma balanço
+    const n = from; n.style.transition='transform .1s';
+    let i=0; const id = setInterval(()=>{ n.style.transform = `translateX(${(i%2?1:-1)*4}px)`; i++; if(i>6){ clearInterval(id); n.style.transform=''; n.style.transition=''; } }, 40);
+    msg.textContent = '❌ Conexão incorreta. Tente novamente.';
+  }
+
+  try{ from.releasePointerCapture(activePointer); }catch{}
+  dragging=null; activePointer=null; redrawAll();
+}
+
+function mouseToPanel(e){
+  const pr = painel.getBoundingClientRect();
+  return { x: e.clientX - pr.left, y: e.clientY - pr.top };
+}
+
+function isEndUsed(end){ return connections.some(c => c.from===end || c.to===end); }
+
+function drawCable(a, b, color, glow=false){
+  ctx.lineWidth = 8; ctx.lineCap='round';
+  const cp1 = { x: a.x + 140, y: a.y }, cp2 = { x: b.x - 140, y: b.y };
+  if(glow){ ctx.strokeStyle = 'rgba(155,231,255,.35)'; ctx.lineWidth = 14; ctx.beginPath(); bezier(a, cp1, cp2, b); ctx.stroke(); }
+  ctx.strokeStyle = color; ctx.lineWidth = 8; ctx.beginPath(); bezier(a, cp1, cp2, b); ctx.stroke();
+}
+function bezier(a, c1, c2, b){ ctx.moveTo(a.x, a.y); ctx.bezierCurveTo(c1.x, c1.y, c2.x, c2.y, b.x, b.y); }
+
+function drawDrag(a, b){ redrawAll(); if(dragging) drawCable(a, b, dragging.color, true); }
+
+function redrawAll(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  connections.forEach(c => drawCable(centerOf(c.from), centerOf(c.to), c.color, false));
+}
+
+function showFinish(){
+  clearFloating();
+  btnFinalizar = document.createElement('button');
+  btnFinalizar.textContent = '✅ Finalizar';
+  btnFinalizar.className = 'btn floating-btn';
+  btnFinalizar.addEventListener('click', () => {
+    msg.textContent = '🌟 Parabéns! Você concluiu o desafio!';
+    clearFloating();
+  });
+  painel.appendChild(btnFinalizar);
+}
+
+document.getElementById('reiniciar').addEventListener('click', () => {
+  createSockets();
+});
+
+createSockets();
+</script>
+</body>
+</html>

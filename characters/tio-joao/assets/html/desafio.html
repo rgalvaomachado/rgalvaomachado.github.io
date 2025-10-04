@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Quebra‑Cabeça com Encaixes – Aurora Boreal</title>
+<style>
+  :root{
+    --bg:#0b0f1a; --panel:#111827; --rim:#1f2937; --accent:#22d3ee; --ok:#22c55e; --warn:#f59e0b;
+    --boardW: 600px; /* largura da área montada (3 colunas) */
+    --boardH: 300px; /* altura da área montada (3 linhas)  */
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; display:grid; place-items:center;
+    background:radial-gradient(1200px 600px at 50% -10%, #14203a 0%, var(--bg) 55%, #05070d 100%);
+    color:#e5e7eb; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  }
+  .wrap{ width:min(1100px, 95vw); display:grid; gap:12px; }
+  h1{ margin:16px 0 4px; text-align:center; font-size:clamp(20px,3.2vw,32px); }
+  p.sub{ margin:0 0 10px; text-align:center; opacity:.85 }
+
+  .stage{ display:grid; grid-template-columns: 420px 1fr; gap:14px; }
+  .panel{ background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+          border:2px solid rgba(255,255,255,.08); border-radius:14px; padding:12px;
+          box-shadow:0 12px 30px rgba(0,0,0,.45), inset 0 0 30px rgba(255,255,255,.06); }
+
+  /* Bandeja à esquerda */
+  .tray{ display:grid; grid-template-rows:auto 1fr; gap:10px; }
+  .tray h2{ margin:0; font-size:16px; font-weight:800; letter-spacing:.02em; text-transform:uppercase; opacity:.9 }
+  .pieces{ display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; align-content:start; max-height: calc(var(--boardH)); overflow:auto; padding-right:4px; }
+
+  /* Tabuleiro à direita */
+  .board{ display:grid; grid-template-rows:auto 1fr; gap:10px; }
+  .board h2{ margin:0; font-size:16px; font-weight:800; text-transform:uppercase; opacity:.9 }
+  .canvas{
+    width:var(--boardW); height:var(--boardH); margin:auto; position:relative; border-radius:12px; overflow:hidden;
+    background: radial-gradient(80% 120% at 50% -20%, rgba(255,255,255,.06), rgba(255,255,255,.02)), #0f172a;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,.06), 0 10px 24px rgba(0,0,0,.4);
+  }
+  .slots{ position:absolute; inset:0; display:grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap:0; }
+  .slot{ outline:none; }
+  .slot{ margin:0; padding:0; }
+  .slot:empty{ outline:1px dashed rgba(255,255,255,.18); }
+  .slot.correct{ outline:none; }
+  .slots .piece{ width:100%; height:100%; }
+  .slots .piece svg{ width:100%; height:100%; }
+  .slot.hint{ outline:2px dashed rgba(34,197,94,.85); box-shadow: inset 0 0 0 3px rgba(34,197,94,.25); }
+
+  /* Elemento peça (SVG) */
+  .piece{ width: calc(var(--boardW) / 3); height: calc(var(--boardH) / 2); background:transparent; border-radius:0; display:block; cursor:grab;
+          box-shadow:none; border:0; }
+  .piece svg{ width:100%; height:100%; display:block; }
+
+  .hud{ text-align:center; min-height:24px; font-weight:700; }
+  .btns{ display:flex; gap:8px; justify-content:center; margin-top:6px; }
+  .btn{ background:#0ea5e9; color:#041019; border:none; padding:10px 14px; border-radius:10px; font-weight:700; cursor:pointer; box-shadow:0 8px 18px rgba(0,0,0,.35) }
+  .btn.warn{ background:var(--warn); color:#1b1300 }
+  .btn.ok{ background:var(--ok); color:#021406 }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Quebra‑Cabeça com Encaixes – Aurora Boreal</h1>
+    <p class="sub">Arraste as peças da bandeja (esquerda) para o tabuleiro (direita). Ordem padrão (sem aleatório).</p>
+
+    <div class="stage">
+      <!-- BANDEJA -->
+      <section class="panel tray">
+        <h2>Bandeja</h2>
+        <div class="pieces" id="tray"></div>
+      </section>
+
+      <!-- TABULEIRO -->
+      <section class="panel board">
+        <h2>Tabuleiro</h2>
+        <div class="canvas">
+          <div class="slots" id="slots"></div>
+        </div>
+        <div class="hud" id="msg"></div>
+        <div class="btns">
+          <button class="btn warn" id="reset">Reiniciar</button>
+          <button class="btn ok" id="solve">Resolver</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const IMG = './aurora.jpg';
+  const COLS=3, ROWS=2;
+  const BW=600, BH=300;              // board size (must match CSS vars)
+  const PW=BW/COLS, PH=BH/ROWS;      // piece size
+
+  const tray  = document.getElementById('tray');
+  const slots = document.getElementById('slots');
+  const msg   = document.getElementById('msg');
+  const btnReset = document.getElementById('reset');
+  const btnSolve = document.getElementById('solve');
+
+  // Prepara slots
+  slots.style.setProperty('--cols', COLS);
+  slots.style.setProperty('--rows', ROWS);
+
+  // Cria slots (em ordem padrão)
+  const total = COLS*ROWS;
+  for(let i=0;i<total;i++){
+    const s = document.createElement('div');
+    s.className = 'slot';
+    s.dataset.slot = i;  // índice alvo correto
+    s.addEventListener('dragover', e=> { e.preventDefault(); e.dataTransfer.dropEffect='move'; });
+    s.addEventListener('drop', onDrop);
+    slots.appendChild(s);
+  }
+
+  // Cria peças na bandeja (EMBARALHADAS)
+  const indices = Array.from({length: total}, (_,i)=> i);
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  indices.forEach(i => {
+    const pieceEl = makePiece(i);
+    tray.appendChild(pieceEl);
+  });
+
+  btnReset.addEventListener('click', reset);
+  btnSolve.addEventListener('click', solve);
+
+  function reset(){
+    msg.textContent='';
+    // devolve todas as peças para a bandeja
+    document.querySelectorAll('.slot').forEach(s=>{ s.classList.remove('correct'); while(s.firstChild) tray.appendChild(s.firstChild); });
+  }
+  function solve(){
+    msg.innerHTML = '✨ <b>Perfeito!</b>';
+    // envia cada peça ao slot correspondente
+    document.querySelectorAll('.piece').forEach(p=>{
+      const idx = +p.dataset.index;
+      const target = slots.querySelector(`[data-slot="${idx}"]`);
+      target.appendChild(p); target.classList.add('correct');
+    });
+  }
+
+  function onDrop(e){
+    e.preventDefault();
+    // limpar qualquer dica anterior
+    document.querySelectorAll('.slot.hint').forEach(s=> s.classList.remove('hint'));
+
+    const data = e.dataTransfer.getData('text/plain');
+    if(!data) return;
+    const piece = document.getElementById(data);
+    if(!piece) return;
+
+    const slotEl = e.currentTarget;
+    const slotIndex = +slotEl.dataset.slot;
+    const pieceIndex = +piece.dataset.index;
+
+    // se o slot já está ocupado, volta para a bandeja
+    if(slotEl.firstChild && slotEl.firstChild !== piece){
+      tray.appendChild(piece);
+      piece.classList.add('shake'); setTimeout(()=> piece.classList.remove('shake'), 220);
+      return;
+    }
+
+    // só aceita quando o índice bate
+    if(slotIndex === pieceIndex){
+      slotEl.appendChild(piece);
+      slotEl.classList.add('correct');
+      if(isSolved()) celebrate();
+    }else{
+      tray.appendChild(piece);
+      piece.classList.add('shake'); setTimeout(()=> piece.classList.remove('shake'), 220);
+    }
+  }
+
+  function isSolved(){
+    const placed = [...slots.children];
+    return placed.every((s,i)=> s.firstChild && +s.firstChild.dataset.index === i);
+  }
+
+  function celebrate(){
+    msg.innerHTML = '🎉 <b>Quebra‑cabeça completo!</b>';
+  }
+
+  // ======= Construção de peça com “encaixes” (SVG clipPath) =======
+  function makePiece(idx){
+    const x = idx % COLS, y = Math.floor(idx / COLS);
+
+    const id = `piece-${idx}`;
+    const svgNS = 'http://www.w3.org/2000/svg';
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'piece';
+    wrapper.id = id; wrapper.draggable = true; wrapper.dataset.index = idx;
+    wrapper.addEventListener('dragstart', e=>{
+      e.dataTransfer.setData('text/plain', id);
+      e.dataTransfer.effectAllowed='move';
+      // Dica: destacar o slot correto
+      const target = slots.querySelector(`[data-slot="${idx}"]`);
+      target?.classList.add('hint');
+    });
+    wrapper.addEventListener('dragend', ()=>{
+      document.querySelectorAll('.slot.hint').forEach(s=> s.classList.remove('hint'));
+    });
+
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${PW} ${PH}`);
+    svg.setAttribute('width', PW);
+    svg.setAttribute('height', PH);
+    svg.setAttribute('preserveAspectRatio', 'none');
+
+    // path local com tabs/entradas baseado na posição
+    const pathD = `M 0 0 H ${PW} V ${PH} H 0 Z`;
+
+    const defs = document.createElementNS(svgNS, 'defs');
+    const clip = document.createElementNS(svgNS, 'clipPath');
+    clip.setAttribute('id', `clip-${id}`);
+    const shape = document.createElementNS(svgNS, 'path');
+    shape.setAttribute('d', pathD);
+    clip.appendChild(shape);
+    defs.appendChild(clip);
+
+    const img = document.createElementNS(svgNS, 'image');
+    img.setAttributeNS('http://www.w3.org/1999/xlink','href', IMG);
+    img.setAttribute('x', -x*PW);
+    img.setAttribute('y', -y*PH);
+    img.setAttribute('width', BW);
+    img.setAttribute('height', BH);
+    img.setAttribute('preserveAspectRatio', 'none');
+    img.setAttribute('clip-path', `url(#clip-${id})`);
+
+    svg.appendChild(defs);
+    svg.appendChild(img);
+
+    wrapper.appendChild(svg);
+    return wrapper;
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Labirinto: Terra → Espaço</title>
+<style>
+  :root{
+    --cell: 36px;          /* tamanho de cada célula */
+    --cols: 19;            /* colunas do labirinto */
+    --rows: 13;            /* linhas do labirinto  */
+  }
+  *{ box-sizing:border-box }
+  html,body{ height:100% }
+  body{
+    margin:0; display:grid; place-items:center; min-height:100svh;
+    background:
+      radial-gradient(120% 200% at 50% 0%, rgba(255,255,255,.04), rgba(255,255,255,.02)), #0e152b;
+    /* fundo neutro e uniforme */
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:#e5e7eb;
+    -webkit-user-select:none; user-select:none;
+  }
+  .wrap{ width:min(95vw, calc(var(--cols)*var(--cell) + 32px + 200px)); display:grid; gap:10px; }
+  h1{ margin:0; text-align:center; font-size:clamp(20px,3.4vw,32px) }
+  .sub{ text-align:center; margin:0 0 6px; opacity:.85 }
+
+  .panel{ padding:12px; border-radius:14px; background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+          border:2px solid rgba(255,255,255,.08); box-shadow:0 12px 30px rgba(0,0,0,.45); }
+
+  .game{ display:grid; grid-template-columns: 1fr auto; gap:16px; align-items:center; }
+
+  .hud{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+  .btn{ border:0; padding:10px 14px; border-radius:10px; background:#38bdf8; color:#041019; font-weight:800; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,.35) }
+  .btn.secondary{ background:#94a3b8 }
+  .status{ font-weight:700 }
+
+  /* Área do labirinto */
+  .maze-wrap{ position:relative; margin:auto; padding:16px; border-radius:14px;
+              background: radial-gradient(80% 120% at 50% -20%, rgba(255,255,255,.06), rgba(255,255,255,.02)), #0e152b;
+              box-shadow: inset 0 0 0 2px rgba(255,255,255,.06), 0 10px 24px rgba(0,0,0,.4); }
+
+  .zone{ position:absolute; top:0; bottom:0; z-index:0; }
+  .zone-left{  left:0; background: transparent; }
+  .zone-center{ left:0; right:0; background: radial-gradient(120% 120% at 50% -20%, rgba(255,255,255,.06), rgba(255,255,255,.02)), #0b1022; }
+  .zone-right{ right:0; background: transparent; }
+  .sun{ position:absolute; border-radius:50%; pointer-events:none; z-index:1;
+        background: radial-gradient(circle at 40% 40%, #fff7c2 0%, #fde68a 22%, #fbbf24 42%, #f59e0b 62%, #b45309 100%);
+        box-shadow: 0 0 60px rgba(251,191,36,.45), 0 0 120px rgba(245,158,11,.25) inset; }
+  .earth{ position:absolute; border-radius:50%; pointer-events:none; z-index:1;
+          background: radial-gradient(circle at 40% 35%, #e0f2fe 0%, #60a5fa 45%, #15803d 55%, #065f46 75%, #0c4a6e 100%);
+          box-shadow: 0 0 30px rgba(14,165,233,.25), inset 0 0 18px rgba(15,118,110,.35); }
+
+  .planet{ position:absolute; width: calc(var(--cell)*1.6); height: calc(var(--cell)*1.6); border-radius:50%; display:grid; place-items:end center; pointer-events:none; z-index:2; }
+  .planet span{ font-size: 11px; color:#e5e7eb; opacity:.9; transform: translateY(6px); }
+  .planet.venus{ background: radial-gradient(circle at 35% 30%, #fff1c7, #e0a96d 55%, #b7791f 80%); box-shadow: 0 0 18px rgba(251,191,36,.35); }
+  .planet.mercury{ background: radial-gradient(circle at 40% 35%, #f1f5f9, #cbd5e1 55%, #94a3b8 85%); box-shadow: 0 0 14px rgba(148,163,184,.35); }
+
+  .play, canvas#draw{
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: none; /* evita scroll/zoom em navegadores com Pointer Events */
+  }
+
+  .play{ position:relative; width: calc(var(--cols)*var(--cell)); height: calc(var(--rows)*var(--cell)); }
+  canvas#draw{ position:absolute; inset:0; background: transparent; border-radius:8px; }
+  .ob{ position:absolute; background:transparent; box-shadow:none; border-radius:0; width: calc(var(--cell)*0.9); height: calc(var(--cell)*0.9); pointer-events:none; z-index:2; }
+  .ob::after{ content: attr(data-emoji); position:absolute; inset:0; display:grid; place-items:center; font-size: clamp(18px, 3vw, 26px); }
+  .win, .lose{ position:absolute; inset:16px; display:none; place-items:center; border-radius:12px; background:radial-gradient(circle at 50% 50%, rgba(250,204,21,.18), transparent 60%); }
+  .win.show, .lose.show{ display:grid; }
+  .lose h2{ margin:0; color:#fff; text-shadow:0 4px 22px rgba(0,0,0,.6) }
+
+  /* controles (D‑pad) */
+  .controls{ display:grid; grid-template-columns: repeat(3, 56px); gap:8px; justify-items:center; align-content:center; margin:0; }
+  .pad{ width:56px; height:56px; border-radius:10px; background:#111827; color:#e5e7eb; border:1px solid rgba(255,255,255,.08); display:grid; place-items:center; font-weight:900; cursor:pointer; box-shadow:0 6px 14px rgba(0,0,0,.35) }
+  .pad:active{ transform: translateY(1px) }
+
+  /* foguete */
+  .ship{
+    position:absolute; width: calc(var(--cell)*1.15); height: calc(var(--cell)*1.15);
+    left:0; top:0; transform: translate(0,0);
+    display:grid; place-items:center; font-size: calc(var(--cell)*0.75);
+    filter: drop-shadow(0 3px 8px rgba(0,0,0,.45));
+    pointer-events:none; /* não intercepta cliques */
+    z-index:3;
+  }
+  .ship::before{ content:'🚀'; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Labirinto: Terra → Espaço</h1>
+    <p class="sub">Guie o <b>foguete</b> da esquerda até o <b>espaço</b> à direita usando as <b>setas/WASD</b> ou os <b>botões</b>. Desvie dos ícones!</p>
+
+    <section class="panel">
+      <div class="hud">
+        <div class="status" id="status">Pronto!</div>
+        <div>
+          <button class="btn secondary" id="reset">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="game">
+        <div class="maze-wrap">
+          <div class="play" id="play">
+            <canvas id="draw" width="468" height="684"></canvas>
+            <!-- Zonas: Terra (esq), Espaço (centro), Sol (dir) -->
+            <div class="zone zone-left"  id="zoneLeft"></div>
+            <div class="zone zone-center" id="zoneCenter"></div>
+            <div class="zone zone-right" id="zoneRight"></div>
+            <div class="earth" id="earth"></div>
+            <div class="sun" id="sun"></div>
+            <!-- Planetas no espaço -->
+            <div class="planet venus" id="venus"><span>Vênus</span></div>
+            <div class="planet mercury" id="mercury"><span>Mercúrio</span></div>
+            <!-- Obstáculos (ícones espalhados) -->
+            <div class="ob" id="ob1"></div>
+            <div class="ob" id="ob2"></div>
+            <div class="ob" id="ob3"></div>
+            <div class="ob" id="ob4"></div>
+            <div class="ob" id="ob5"></div>
+            <div class="ob" id="ob6"></div>
+            <div class="ob" id="ob7"></div>
+            <div class="ob" id="ob8"></div>
+            <div class="ob" id="ob9"></div>
+            <div class="ob" id="ob10"></div>
+            <div class="ob" id="ob11"></div>
+            <div class="ob" id="ob12"></div>
+            <div class="ship" id="ship"></div>
+            <div class="win" id="win"><h2>🚀 Chegou ao Espaço!</h2></div>
+            <div class="lose" id="lose"><h2>❌ Bateu no obstáculo!</h2></div>
+          </div>
+        </div>
+        <div class="controls" aria-label="controles">
+          <span></span><button class="pad" data-dy="-1">▲</button><span></span>
+          <button class="pad" data-dx="-1">◀</button><button class="pad" data-dx="0" data-dy="0">●</button><button class="pad" data-dx="1">▶</button>
+          <span></span><button class="pad" data-dy="1">▼</button><span></span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<script>
+(function(){
+  // Layout base (horizontal)
+  const CELL = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell')) || 36;
+  const COLS = 19, ROWS = 13;
+  const W = COLS * CELL, H = ROWS * CELL;
+  const LEFT_PCT = 0.20, RIGHT_PCT = 0.15; // Terra 20%, Sol 15%, Espaço = restante
+
+  const play = document.getElementById('play');
+  const cvs = document.getElementById('draw');
+  const ctx = cvs.getContext('2d');
+  const resetBtn = document.getElementById('reset');
+  const win = document.getElementById('win');
+  const lose = document.getElementById('lose');
+  const status = document.getElementById('status');
+  const ship = document.getElementById('ship');
+
+  // Tamanhos e posicionamento da área
+  cvs.width = W; cvs.height = H;
+  play.style.width = W + 'px';
+  play.style.height = H + 'px';
+
+  const zoneLeft  = document.getElementById('zoneLeft');
+  const zoneCenter= document.getElementById('zoneCenter');
+  const zoneRight = document.getElementById('zoneRight');
+
+  const leftW  = Math.round(W * LEFT_PCT);
+  const rightW = Math.round(W * RIGHT_PCT);
+  const centerW= W - leftW - rightW;
+
+  zoneLeft.style.width  = leftW + 'px';
+  zoneCenter.style.left = leftW + 'px';
+  zoneCenter.style.width= centerW + 'px';
+  zoneRight.style.width = rightW + 'px';
+
+  const sun = document.getElementById('sun');
+  // diâmetro do Sol: grande, ocupando boa parte da faixa direita e avançando sobre o centro
+  const SUN_D = Math.min(H*0.9, rightW*1.8);
+  const SUN_R = Math.floor(SUN_D/2);
+  sun.style.width = SUN_D + 'px';
+  sun.style.height = SUN_D + 'px';
+  sun.style.top = (Math.floor(H/2 - SUN_R)) + 'px';
+  // deixa um pedaço avançar para dentro do centro
+  sun.style.right = Math.max(0, Math.floor(rightW*0.2 - SUN_R*0.3)) + 'px';
+
+  const earth = document.getElementById('earth');
+  // diâmetro da Terra (menor que o Sol, cabendo na faixa esquerda)
+  const EARTH_D = Math.min(H*0.42, Math.max(60, leftW*0.8));
+  const EARTH_R = Math.floor(EARTH_D/2);
+  earth.style.width  = EARTH_D + 'px';
+  earth.style.height = EARTH_D + 'px';
+  earth.style.left   = Math.max(8, Math.floor(leftW*0.45 - EARTH_R)) + 'px';
+  earth.style.top    = Math.floor(H/2 - EARTH_R) + 'px';
+
+  // Obstáculos (ícones espalhados) e seus emojis
+  const OB = [
+    {cx:0.8, y:2.2, emoji:'🎈'},
+    {cx:1.8, y:8.5, emoji:'🐦'},
+    {cx:2.8, y:4.2, emoji:'✈️'},
+    {cx:3.8, y:6.8, emoji:'🪁'},
+    {cx:4.8, y:3.2, emoji:'🦅'},
+    {cx:5.8, y:7.8, emoji:'🛰️'},
+    {cx:6.2, y:5.0, emoji:'🛰️'},
+    {cx:6.6, y:9.0, emoji:'🎈'}
+  ];
+  const obEls = [ob1,ob2,ob3,ob4,ob5,ob6,ob7,ob8,ob9,ob10,ob11,ob12];
+  const iconSize = Math.floor(CELL*0.8);
+  OB.forEach((r,i)=>{
+    const el = obEls[i];
+    const x = leftW + (r.cx * (centerW / (COLS * 0.75))); // espalha no centro proporcionalmente
+    el.style.left = Math.round(x) + 'px';
+    el.style.top  = Math.round(r.y*CELL) + 'px';
+    el.style.width= iconSize + 'px';
+    el.style.height= iconSize + 'px';
+    el.dataset.emoji = r.emoji;
+  });
+  // esconder ícones excedentes
+  for(let i=OB.length;i<obEls.length;i++){ obEls[i].style.display='none'; }
+
+  const venus   = document.getElementById('venus');
+  const mercury = document.getElementById('mercury');
+  // posições: mais perto do Sol → mais à direita
+  venus.style.left   = (leftW + Math.round(centerW*0.58)) + 'px';
+  venus.style.top    = Math.round(H*0.32) + 'px';
+  mercury.style.left = (leftW + Math.round(centerW*0.70)) + 'px';
+  mercury.style.top  = Math.round(H*0.62) + 'px';
+  // tamanhos proporcionais (Vênus > Mercúrio)
+  venus.style.width = venus.style.height = Math.floor(CELL*1.9) + 'px';
+  mercury.style.width = mercury.style.height = Math.floor(CELL*1.2) + 'px';
+
+  // Estado do foguete
+  const SHIP_SIZE = parseFloat(getComputedStyle(ship).width);
+  const STEP = Math.floor(CELL*0.6);
+  let pos = leftStart(); // topo‑esquerda do ship
+
+  function leftStart(){
+    const pr = play.getBoundingClientRect();
+    const er = earth.getBoundingClientRect();
+    const ex = er.left - pr.left + er.width/2;
+    const ey = er.top  - pr.top  + er.height/2;
+    return { x: Math.floor(ex - SHIP_SIZE/2), y: Math.floor(ey - SHIP_SIZE/2) };
+  }
+
+  function placeShip(){ ship.style.transform = `translate(${pos.x}px, ${pos.y}px)`; }
+  placeShip();
+
+  // Colisão eixo-alinhado
+  function rectsOverlap(a,b){ return !(a.x+a.w <= b.x || b.x+b.w <= a.x || a.y+a.h <= b.y || b.y+b.h <= a.y); }
+  function shipRect(){ return { x:pos.x, y:pos.y, w:SHIP_SIZE, h:SHIP_SIZE }; }
+  function collideAny(){
+    const s = shipRect();
+    // obstáculos (ícones)
+    for(const el of obEls){
+      const r = el.getBoundingClientRect();
+      const p = play.getBoundingClientRect();
+      const rr = { x:r.left-p.left, y:r.top-p.top, w:r.width, h:r.height };
+      if(rectsOverlap(s, rr)) return true;
+    }
+    // planetas
+    for(const el of [venus, mercury]){
+      const r = el.getBoundingClientRect();
+      const p = play.getBoundingClientRect();
+      const rr = { x:r.left-p.left, y:r.top-p.top, w:r.width, h:r.height };
+      if(rectsOverlap(s, rr)) return true;
+    }
+    return false;
+  }
+
+  function withinBounds(nx,ny){ return nx>=0 && ny>=0 && nx+SHIP_SIZE<=W && ny+SHIP_SIZE<=H; }
+
+  function shipHitsSun(){
+    const pr = play.getBoundingClientRect();
+    const sr = sun.getBoundingClientRect();
+    const sx = sr.left - pr.left + sr.width/2;
+    const sy = sr.top  - pr.top  + sr.height/2;
+    const cx = pos.x + SHIP_SIZE/2;
+    const cy = pos.y + SHIP_SIZE/2;
+    const dx = cx - sx, dy = cy - sy;
+    const dist = Math.hypot(dx,dy);
+    return dist <= (sr.width/2) - (SHIP_SIZE*0.25); // entra um pouco no Sol
+  }
+
+  function move(dx,dy){
+    const nx = pos.x + dx*STEP; const ny = pos.y + dy*STEP;
+    if(!withinBounds(nx,ny)) { flash(); return; }
+    const old = {...pos}; pos = {x:nx,y:ny};
+    if(collideAny()){ pos = old; flash(); return; }
+    placeShip();
+    // vitória ao entrar no Sol circular
+    if(shipHitsSun()) winNow();
+  }
+
+  function flash(){
+    // breve efeito de erro
+    play.style.animation = 'shake .12s linear';
+    setTimeout(()=> play.style.animation='', 130);
+  }
+
+  function winNow(){
+    status.textContent = '🚀 Chegou ao espaço!';
+    win.classList.add('show');
+    document.removeEventListener('keydown', onKey);
+  }
+
+  function reset(){
+    win.classList.remove('show'); lose.classList.remove('show');
+    status.textContent = 'Pronto!';
+    pos = leftStart(); placeShip();
+    document.addEventListener('keydown', onKey);
+  }
+
+  // Teclado e botões
+  function onKey(e){
+    const k = e.key.toLowerCase();
+    if(k==='arrowup'||k==='w') move(0,-1);
+    else if(k==='arrowdown'||k==='s') move(0,1);
+    else if(k==='arrowleft'||k==='a') move(-1,0);
+    else if(k==='arrowright'||k==='d') move(1,0);
+  }
+  document.addEventListener('keydown', onKey);
+
+  document.querySelectorAll('.pad').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const dx = parseInt(b.dataset.dx||0), dy = parseInt(b.dataset.dy||0);
+      move(dx,dy);
+    });
+  });
+
+  document.getElementById('reset').addEventListener('click', reset);
+
+  // Pequena animação usada no flash (erro)
+  const style = document.createElement('style');
+  style.textContent = `@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}`;
+  document.head.appendChild(style);
+})();
+</script>
+</body>
+</html>
