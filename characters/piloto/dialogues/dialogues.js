@@ -9,6 +9,11 @@ const pilotoDialogues = [
         text: "Oi %playerName%! Quando o Sol faz uma grande erupção solar, uma grande explosão de luz, calor e partículas que saem voando. Essas partículas carregadas podem atrapalhar os sistemas de comunicação e navegação dos aviões. Às vezes, temos que mudar a rota ou usar rádios alternativos para manter tudo seguro"
     },
     {
+        type: "html",
+        media: "characters/piloto/assets/html/desafio.html",
+        caption: "Desafio Piloto"
+    },
+    {
         npc: false,
         text: "Uau! Então a atividade solar pode bagunçar o caminho do avião lá no alto?"
     },
