@@ -39,7 +39,7 @@ const agricultorDialoguesPT = [
 const agricultorDialoguesEN = [
     {
         npc: false,
-        text: "Hi, Rosa! How are you? I heard that the Sun is doing some mischief up in the sky and that this might affect your work"
+        text: "Hi, Rosa! How are you? I heard the Sun is causing some trouble up in the sky and this might affect your work"
     },
     {
         npc: true,
@@ -56,7 +56,7 @@ const agricultorDialoguesEN = [
     },
     {
         npc: true,
-        text: "Actually, besides the light projection, during a solar storm the Sun also releases a kind of 'hot gas ball' called Coronal Mass Ejection, or CME. It's like the Sun throwing a bunch of bright energy-filled gas into space!"
+        text: "Actually, besides the light projection, during a solar storm the Sun also releases a kind of 'hot gas ball' called Coronal Mass Ejection, or CME. It's like the Sun is throwing a bunch of bright energy-filled gas into space!"
     },
     {
         npc: false,

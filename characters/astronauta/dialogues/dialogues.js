@@ -97,11 +97,11 @@ const astronautaDialoguesEN = [
     },
     {
         npc: true,
-        text: "The Sun goes through a cycle, as if it had 'moods'. Sometimes it's calmer, and sometimes it gets more agitated, releasing a lot of energy and particles into space. We call this the solar activity cycle, which lasts on average 11 years"
+        text: "The Sun goes through a cycle, as if it had 'moods'. Sometimes it's calmer, and sometimes it gets more agitated, releasing a lot of energy and particles into space. We call this the solar activity cycle, and it lasts about 11 years on average."
     },
     {
         npc: false,
-        text: "And what are these particles it releases?"
+        text: "Wait… what exactly are these particles it’s releasing?"
     },
     {
         npc: true,
@@ -126,7 +126,7 @@ const astronautaDialoguesEN = [
     },
     {
         npc: true,
-        text: "That's right! Those are solar flares and coronal mass ejections. It's the Sun working, shining and sending energy into space. It looks calm, but it's always in motion, rotating and releasing energy"
+        text: "Yes! Those are solar flares and coronal mass ejections. It's the Sun working, shining and sending energy into space. It looks calm, but it's always in motion, rotating and releasing energy"
     },
     {
         npc: false,
@@ -138,11 +138,11 @@ const astronautaDialoguesEN = [
     },
     {
         npc: false,
-        text: "Hahaha! So the Sun is really animated!"
+        text: "Hahaha! The Sun is really full of energy!"
     },
     {
         npc: true,
-        text: "Yes! And now that you've met so many people who feel its influence, how about going back to Earth and telling what you learned?"
+        text: "Yes! And now that you’ve met so many people who feel its effects, how about heading back to Earth and sharing what you’ve learned?"
     }
 ];
 

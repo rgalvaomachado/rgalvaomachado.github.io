@@ -44,7 +44,7 @@ const pilotoDialoguesEN = [
     },
     {
         npc: true,
-        text: "Hi %playerName%! When the Sun has a big solar eruption, a big explosion of light, heat and particles that go flying. These charged particles can interfere with airplane communication and navigation systems. Sometimes, we have to change routes or use alternative radios to keep everything safe"
+        text: "Hi %playerName%! When the Sun has a big solar eruption, a big explosion of light, heat and particles go flying. These charged particles can interfere with airplane communication and navigation systems. Sometimes, we have to change path or use alternative radios to keep everything safe"
     },
     {
         type: "html",
@@ -64,12 +64,12 @@ const pilotoDialoguesEN = [
         text: "But what is space weather exactly?"  
     },
     {
-       npc: true,
+        npc: true,
         text: "Space weather is the field of science that studies how activities and explosions on the Sun affect the space environment of Earth and other planets"
     },
     {
         npc: false,
-        text: "That's cool, I wonder if anyone else suffers from the impacts of space weather here on Earth?"
+        text: "That's cool, I wonder if anyone else suffers from the impacts of space weather here on Earth..."
     }
        
 ];

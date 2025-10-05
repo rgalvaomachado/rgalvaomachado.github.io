@@ -72,7 +72,7 @@ const tioJoaoDialoguesPT = [
 const tioJoaoDialoguesEN = [
     {
         npc: false,
-        text: "Uncle, have you seen that meme of the Sun vomiting on Earth? I see it all the time and always laugh a lot!"
+        text: "Uncle João, have you seen that meme of the Sun vomiting on Earth? I see it all the time and always laugh a lot!"
     },
     {
         npc: true,
@@ -97,7 +97,7 @@ const tioJoaoDialoguesEN = [
     },
     {
         npc: true,
-        text: "hahaha more or less! Actually, this 'vomit' is a joke about a real phenomenon called solar storm. Sometimes, the Sun releases a lot of energy and particles into space"
+        text: "hahaha kind of! Actually, this 'vomit' is a joke about a real phenomenon called solar storm. Sometimes, the Sun releases a lot of energy and particles into space"
     },
     {
         npc: false,

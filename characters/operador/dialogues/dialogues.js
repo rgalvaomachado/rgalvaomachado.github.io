@@ -76,7 +76,7 @@ const operadorDialoguesEN = [
     },
     {
         npc: true,
-        text: "That's right! And that's why it's important to know about these phenomena, so we can better understand how the Sun communicates with Earth. I read the other day that NASA is going to launch another package of space weather instruments, HERMES. So cool!"   
+        text: "Oh yeah! And that's why it's important to know about these phenomena, so we can better understand how the Sun interact with Earth. I saw the other day that NASA’s getting ready to launch a new set of space weather instruments called HERMES. Pretty cool!"   
     }
 ];
 
