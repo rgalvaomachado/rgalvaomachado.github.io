@@ -24,17 +24,17 @@
             
             <div class="personalization-content">
                 <div class="game-title">
-                    <h1 id="gameTitle">🌟 Discovering the Sun 🌟</h1>
-                    <p class="subtitle" id="gameSubtitle">Let's create your solar adventure!</p>
+                    <h1 id="gameTitle"></h1>
+                    <p class="subtitle" id="gameSubtitle"></p>
                 </div>
                 
                 <div class="name-section">
-                    <h2 id="nameQuestion">What's your name?</h2>
+                    <h2 id="nameQuestion"></h2>
                     <input type="text" id="playerName" placeholder="Type your name here..." maxlength="20">
                 </div>
                 
                 <div class="character-selection">
-                    <h2 id="characterQuestion">Choose your character:</h2>
+                    <h2 id="characterQuestion"></h2>
                     <div class="character-options">
                 <div class="character-option" onclick="selectCharacter('curioso')">
                     <div class="character-avatar curioso">
@@ -61,7 +61,7 @@
                 
                 <button id="startAdventureBtn" onclick="iniciarAventura()" class="btn btn-primary btn-large" disabled>
                     <i class="fas fa-play"></i>
-                    <span id="startButtonText">Start Adventure!</span>
+                    <span id="startButtonText"></span>
                 </button>
             </div>
         </div>
@@ -134,8 +134,8 @@
                         </div>
                     </div>
                 </div>
-                <h2 class="transition-title" id="transitionTitle">Meeting the Friends...</h2>
-                <p class="transition-subtitle" id="transitionSubtitle">Preparing the amazing conversations!</p>
+                <h2 class="transition-title" id="transitionTitle"></h2>
+                <p class="transition-subtitle" id="transitionSubtitle"></p>
                 <div class="loading-dots">
                     <div class="dot"></div>
                     <div class="dot"></div>
@@ -154,8 +154,8 @@
                         <img id="playerCharacterHead" src="shared/assets/heads/pj1Head.png" alt="Player Character">
                     </div>
                     <div class="story-text">
-                        <h2 id="chooseFriendText">Choose a friend to meet!</h2>
-                        <p id="friendDescription">Click on one of Uncle João's friends to discover how they deal with space weather! 🌟</p>
+                        <h2 id="chooseFriendText"></h2>
+                        <p id="friendDescription"></p>
                     </div>
                 </div>
                 
@@ -165,7 +165,7 @@
                 
                 <button class="btn btn-secondary" onclick="voltarHistoria()">
                     <i class="fas fa-arrow-left"></i>
-                    <span id="backButtonText">Back</span>
+                    <span id="backButtonText"></span>
                 </button>
             </div>
         </div>
@@ -423,13 +423,13 @@
             
             <!-- Main content centered -->
             <div class="final-content">
-                <h1 class="congratulations-title" id="congratulationsTitle">Congratulations!</h1>
-                <p class="congratulations-subtitle" id="congratulationsSubtitle">You completed the solar adventure!</p>
+                <h1 class="congratulations-title" id="congratulationsTitle"></h1>
+                <p class="congratulations-subtitle" id="congratulationsSubtitle"></p>
                 
                 <div class="friends-card">
                     <h3 class="friends-title">
                         <i class="fas fa-trophy"></i>
-                        <span id="friendsTitle">Your Friends Met:</span>
+                        <span id="friendsTitle"></span>
                     </h3>
                     <div class="friends-grid">
                         <div class="friend-item">
@@ -453,7 +453,7 @@
                 
                 <button class="play-again-btn" onclick="reiniciarAventura()">
                     <i class="fas fa-redo"></i>
-                    <span id="playAgainText">Play Again!</span>
+                    <span id="playAgainText"></span>
                 </button>
             </div>
         </div>

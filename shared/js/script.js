@@ -79,7 +79,7 @@ const translations = {
         
         // Character selection
         chooseFriend: "Choose a friend to meet!",
-        friendDescription: "Click on one of Uncle João's friends to discover how they use the sun! 🌟",
+        friendDescription: "Click on one of Uncle João's friends to discover how they deal with space weather! 🌟",
         backButton: "Back",
         
         // Transition
