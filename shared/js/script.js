@@ -768,7 +768,12 @@ function showMediaInDialogue(mediaDialogue, currentScreenElement) {
                 
             case 'html':
                 mediaElement = document.createElement('iframe');
-                mediaElement.src = mediaDialogue.media;
+                // Use language-specific HTML file
+                let htmlSrc = mediaDialogue.media;
+                if (currentLanguage === 'en' && htmlSrc.includes('desafio.html')) {
+                    htmlSrc = htmlSrc.replace('desafio.html', 'desafio_en.html');
+                }
+                mediaElement.src = htmlSrc;
                 mediaElement.style.width = '90vw';
                 mediaElement.style.height = '80vh';
                 mediaElement.style.border = 'none';
