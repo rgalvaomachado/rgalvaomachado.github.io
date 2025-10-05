@@ -51,6 +51,5 @@ function conhecerAmigos() {
 
 // Inicializar quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Tio João - Página carregada');
     initTioJoaoDialogue();
 });

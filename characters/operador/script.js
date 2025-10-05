@@ -63,6 +63,5 @@ function voltarEscolha() {
 
 // Inicializar quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Operador - Página carregada');
     initOperadorDialogue();
 });

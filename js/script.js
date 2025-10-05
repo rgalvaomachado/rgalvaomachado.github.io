@@ -9,7 +9,6 @@ let isTyping = false;
 
 // Aguardar o DOM estar pronto
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM carregado - iniciando jogo infantil');
     
     // Esconder todas as telas exceto a de apresentação
     const screens = document.querySelectorAll('.screen');
@@ -21,13 +20,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Mostrar apenas a tela de apresentação
     showScreen('apresentacao');
-    
-    console.log('Jogo infantil inicializado');
 });
 
 // Função para mostrar telas com transição suave
 function showScreen(screenId) {
-    console.log('Mostrando tela:', screenId);
     
     const targetScreen = document.getElementById(screenId);
     if (!targetScreen) {
@@ -62,7 +58,6 @@ function showScreen(screenId) {
                 targetScreen.style.opacity = '1';
                 targetScreen.style.transform = 'translateX(0) scale(1)';
                 currentScreen = screenId;
-                console.log('Tela mostrada:', screenId);
             }, 50);
         }, 300);
     } else {
@@ -71,7 +66,6 @@ function showScreen(screenId) {
         targetScreen.style.opacity = '1';
         targetScreen.style.transform = 'translateX(0) scale(1)';
         currentScreen = screenId;
-        console.log('Tela mostrada:', screenId);
     }
 }
 
@@ -79,7 +73,6 @@ function showScreen(screenId) {
 
 // 1. Iniciar aventura (Apresentação -> História)
 function iniciarAventura() {
-    console.log('Iniciando aventura do jogador');
     // Configurar diálogos do tio
     setupDialogueData('tio');
     showScreen('historia');
@@ -91,13 +84,11 @@ function iniciarAventura() {
 
 // 2. Conhecer amigos (História -> Escolha de Personagens)
 function conhecerAmigos() {
-    console.log('Conhecendo os amigos do tio João');
     showScreen('escolhaPersonagem');
 }
 
 // 3. Conversar com personagem (Escolha -> Conversa)
 function conversarComPersonagem(personagem) {
-    console.log('Conversando com:', personagem);
     
     // Verificar se pode conversar com A Astronauta
     if (personagem === 'astronauta') {
@@ -427,7 +418,6 @@ window.nextDialogue = nextDialogue;
 
 // 4. Voltar para escolha de personagens (Conversa -> Escolha)
 function voltarEscolha() {
-    console.log('Voltando para escolha de personagens');
     showScreen('escolhaPersonagem');
     
     // Atualizar indicadores visuais após a transição
@@ -438,25 +428,21 @@ function voltarEscolha() {
 
 // 5. Voltar para história (Escolha -> História)
 function voltarHistoria() {
-    console.log('Voltando para história');
     showScreen('historia');
 }
 
 // 6. Voltar para início (Qualquer tela -> Apresentação)
 function voltarInicio() {
-    console.log('Voltando para início');
     showScreen('apresentacao');
 }
 
 // 7. Finalizar aventura (Astronauta -> Fim)
 function finalizarAventura() {
-    console.log('Finalizando aventura');
     showScreen('fim');
 }
 
 // 8. Reiniciar aventura (Fim -> Apresentação)
 function reiniciarAventura() {
-    console.log('Reiniciando aventura');
     // Limpar estado
     visitedCharacters = [];
     showScreen('apresentacao');
@@ -628,7 +614,6 @@ document.head.appendChild(style);
 
 // Efeitos sonoros simulados (visual)
 function playSoundEffect(type) {
-    console.log('Efeito sonoro:', type);
     // Aqui você pode adicionar efeitos sonoros reais se quiser
 }
 
@@ -828,14 +813,3 @@ window.voltarHistoria = voltarHistoria;
 window.voltarInicio = voltarInicio;
 window.finalizarAventura = finalizarAventura;
 window.reiniciarAventura = reiniciarAventura;
-
-console.log('Jogo infantil carregado - funções disponíveis:', {
-    iniciarAventura,
-    conhecerAmigos,
-    conversarComPersonagem,
-    voltarEscolha,
-    voltarHistoria,
-    voltarInicio,
-    finalizarAventura,
-    reiniciarAventura
-});

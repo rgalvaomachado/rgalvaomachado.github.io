@@ -63,6 +63,5 @@ function finalizarAventura() {
 
 // Inicializar quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Astronauta - Página carregada');
     initAstronautaDialogue();
 });
