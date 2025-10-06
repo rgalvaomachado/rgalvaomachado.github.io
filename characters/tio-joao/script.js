@@ -6,20 +6,20 @@ function setupTioJoaoDialogue() {
         {
             speaker: 'Tio João',
             avatar: '👨‍🔬',
-            text: '%playerName%, você sabia que o sol é muito importante para muitas pessoas trabalharem?',
-            isPlayer: false
+            text: 'Lucas, você sabia que o sol é muito importante para muitas pessoas trabalharem?',
+            isLucas: false
         },
         {
-            speaker: '%playerName%',
+            speaker: 'Lucas',
             avatar: '👦',
             text: 'Sério, tio? Como assim? 🤔',
-            isPlayer: true
+            isLucas: true
         },
         {
             speaker: 'Tio João',
             avatar: '👨‍🔬',
             text: 'Vou te apresentar alguns amigos meus que trabalham com o sol todos os dias!',
-            isPlayer: false
+            isLucas: false
         }
     ];
     
@@ -51,5 +51,6 @@ function conhecerAmigos() {
 
 // Inicializar quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Tio João - Página carregada');
     initTioJoaoDialogue();
 });

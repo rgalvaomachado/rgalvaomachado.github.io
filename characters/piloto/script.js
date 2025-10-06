@@ -4,34 +4,34 @@
 function setupPilotoDialogue() {
     const dialogueData = [
         {
-            speaker: 'Carlos',
+            speaker: 'Capitã Ana',
             avatar: '✈️',
-            text: 'Olá %playerName%! Eu sou a Carlos! ✈️',
-            isPlayer: false
+            text: 'Olá Lucas! Eu sou a Capitã Ana! ✈️',
+            isLucas: false
         },
         {
-            speaker: 'Carlos',
+            speaker: 'Capitã Ana',
             avatar: '✈️',
             text: 'Você sabia que o sol é meu GPS natural? Ele me ajuda a saber para onde estou indo!',
-            isPlayer: false
+            isLucas: false
         },
         {
-            speaker: '%playerName%',
+            speaker: 'Lucas',
             avatar: '👦',
             text: 'Nossa! Como o sol pode ser um GPS? 🤔',
-            isPlayer: true
+            isLucas: true
         },
         {
-            speaker: 'Carlos',
+            speaker: 'Capitã Ana',
             avatar: '✈️',
             text: 'Antigamente, os pilotos usavam o sol para se orientar! Agora temos aviões que voam usando energia solar!',
-            isPlayer: false
+            isLucas: false
         },
         {
-            speaker: 'Carlos',
+            speaker: 'Capitã Ana',
             avatar: '✈️',
             text: 'E nos aeroportos, temos painéis solares gigantes que geram energia limpa! É incrível! ☀️',
-            isPlayer: false
+            isLucas: false
         }
     ];
     
@@ -63,5 +63,6 @@ function voltarEscolha() {
 
 // Inicializar quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Piloto - Página carregada');
     initPilotoDialogue();
 });

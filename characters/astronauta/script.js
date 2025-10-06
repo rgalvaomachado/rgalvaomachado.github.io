@@ -1,44 +1,44 @@
-// Script específico dA Astronauta
+// Script específico do Astronauta
 
-// Configurar dados de diálogo dA Astronauta
+// Configurar dados de diálogo do Astronauta
 function setupAstronautaDialogue() {
     const dialogueData = [
         {
-            speaker: 'Lúcia',
+            speaker: 'Comandante Pedro',
             avatar: '🚀',
-            text: 'E aí, %playerName%! Eu sou o Lúcia! 🚀',
-            isPlayer: false
+            text: 'E aí, Lucas! Eu sou o Comandante Pedro! 🚀',
+            isLucas: false
         },
         {
-            speaker: 'Lúcia',
+            speaker: 'Comandante Pedro',
             avatar: '🚀',
             text: 'Você sabia que no espaço eu posso ver o sol de um jeito que ninguém na Terra consegue?',
-            isPlayer: false
+            isLucas: false
         },
         {
-            speaker: '%playerName%',
+            speaker: 'Lucas',
             avatar: '👦',
             text: 'Nossa! Como é o sol no espaço? 🤔',
-            isPlayer: true
+            isLucas: true
         },
         {
-            speaker: 'Lúcia',
+            speaker: 'Comandante Pedro',
             avatar: '🚀',
             text: 'É lindo! Sem a atmosfera da Terra, o sol brilha muito mais forte! E nossa estação espacial funciona toda com painéis solares!',
-            isPlayer: false
+            isLucas: false
         },
         {
-            speaker: 'Lúcia',
+            speaker: 'Comandante Pedro',
             avatar: '🚀',
             text: 'Eu estudo o sol para entender como ele funciona e ajudar a proteger a Terra! É minha missão! ☀️',
-            isPlayer: false
+            isLucas: false
         }
     ];
     
     return dialogueData;
 }
 
-// Inicializar diálogo dA Astronauta
+// Inicializar diálogo do Astronauta
 function initAstronautaDialogue() {
     const dialogueData = setupAstronautaDialogue();
     
@@ -63,5 +63,6 @@ function finalizarAventura() {
 
 // Inicializar quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Astronauta - Página carregada');
     initAstronautaDialogue();
 });

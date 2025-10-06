@@ -4,34 +4,34 @@
 function setupOperadorDialogue() {
     const dialogueData = [
         {
-            speaker: 'Nivaldo',
+            speaker: 'Engenheira Maria',
             avatar: '⚡',
-            text: 'Oi %playerName%! Eu sou a Nivaldo! ⚡',
-            isPlayer: false
+            text: 'Oi Lucas! Eu sou a Engenheira Maria! ⚡',
+            isLucas: false
         },
         {
-            speaker: 'Nivaldo',
+            speaker: 'Engenheira Maria',
             avatar: '⚡',
             text: 'Eu trabalho em uma usina solar gigante! É como se eu fosse a "chefe" da energia do sol!',
-            isPlayer: false
+            isLucas: false
         },
         {
-            speaker: '%playerName%',
+            speaker: 'Lucas',
             avatar: '👦',
             text: 'Uau! Como funciona uma usina solar? 🤔',
-            isPlayer: true
+            isLucas: true
         },
         {
-            speaker: 'Nivaldo',
+            speaker: 'Engenheira Maria',
             avatar: '⚡',
             text: 'Imagina milhares de espelhos gigantes que seguem o sol! Eles captam a luz e transformam em energia elétrica!',
-            isPlayer: false
+            isLucas: false
         },
         {
-            speaker: 'Nivaldo',
+            speaker: 'Engenheira Maria',
             avatar: '⚡',
             text: 'Depois eu envio essa energia para as casas de todo mundo! É como ser a "mãe" da energia limpa! ☀️',
-            isPlayer: false
+            isLucas: false
         }
     ];
     
@@ -63,5 +63,6 @@ function voltarEscolha() {
 
 // Inicializar quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Operador - Página carregada');
     initOperadorDialogue();
 });
