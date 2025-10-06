@@ -9,6 +9,7 @@ let isTyping = false;
 
 // Aguardar o DOM estar pronto
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM carregado - iniciando jogo infantil');
     
     // Esconder todas as telas exceto a de apresentação
     const screens = document.querySelectorAll('.screen');
@@ -20,10 +21,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Mostrar apenas a tela de apresentação
     showScreen('apresentacao');
+    
+    console.log('Jogo infantil inicializado');
 });
 
 // Função para mostrar telas com transição suave
 function showScreen(screenId) {
+    console.log('Mostrando tela:', screenId);
     
     const targetScreen = document.getElementById(screenId);
     if (!targetScreen) {
@@ -58,6 +62,7 @@ function showScreen(screenId) {
                 targetScreen.style.opacity = '1';
                 targetScreen.style.transform = 'translateX(0) scale(1)';
                 currentScreen = screenId;
+                console.log('Tela mostrada:', screenId);
             }, 50);
         }, 300);
     } else {
@@ -66,6 +71,7 @@ function showScreen(screenId) {
         targetScreen.style.opacity = '1';
         targetScreen.style.transform = 'translateX(0) scale(1)';
         currentScreen = screenId;
+        console.log('Tela mostrada:', screenId);
     }
 }
 
@@ -73,6 +79,7 @@ function showScreen(screenId) {
 
 // 1. Iniciar aventura (Apresentação -> História)
 function iniciarAventura() {
+    console.log('Iniciando aventura do Lucas');
     // Configurar diálogos do tio
     setupDialogueData('tio');
     showScreen('historia');
@@ -84,13 +91,15 @@ function iniciarAventura() {
 
 // 2. Conhecer amigos (História -> Escolha de Personagens)
 function conhecerAmigos() {
+    console.log('Conhecendo os amigos do tio João');
     showScreen('escolhaPersonagem');
 }
 
 // 3. Conversar com personagem (Escolha -> Conversa)
 function conversarComPersonagem(personagem) {
+    console.log('Conversando com:', personagem);
     
-    // Verificar se pode conversar com A Astronauta
+    // Verificar se pode conversar com o astronauta
     if (personagem === 'astronauta') {
         const requiredCharacters = ['agricultor', 'piloto', 'operador'];
         const hasTalkedToAll = requiredCharacters.every(char => visitedCharacters.includes(char));
@@ -135,148 +144,148 @@ function setupDialogueData(personagem) {
             {
                 speaker: 'Tio João',
                 avatar: '👨‍🔬',
-                text: '%playerName%, você sabia que o sol é muito importante para muitas pessoas trabalharem?',
-                isPlayer: false
+                text: 'Lucas, você sabia que o sol é muito importante para muitas pessoas trabalharem?',
+                isLucas: false
             },
             {
-                speaker: '%playerName%',
+                speaker: 'Lucas',
                 avatar: '👦',
                 text: 'Sério, tio? Como assim? 🤔',
-                isPlayer: true
+                isLucas: true
             },
             {
                 speaker: 'Tio João',
                 avatar: '👨‍🔬',
                 text: 'Vou te apresentar alguns amigos meus que trabalham com o sol todos os dias!',
-                isPlayer: false
+                isLucas: false
             }
         ],
         'agricultor': [
             {
-                speaker: 'Rosa',
+                speaker: 'Seu Zé',
                 avatar: '🌱',
-                text: 'Oi %playerName%! Eu sou o Rosa! 🌱',
-                isPlayer: false
+                text: 'Oi Lucas! Eu sou o Seu Zé! 🌱',
+                isLucas: false
             },
             {
-                speaker: 'Rosa',
+                speaker: 'Seu Zé',
                 avatar: '🌱',
                 text: 'Sabia que eu uso o sol para fazer minhas plantas crescerem? Ele me ajuda a bombear água para regar tudo!',
-                isPlayer: false
+                isLucas: false
             },
             {
-                speaker: '%playerName%',
+                speaker: 'Lucas',
                 avatar: '👦',
-                text: 'Uau! Como assim, Rosa? 🤔',
-                isPlayer: true
+                text: 'Uau! Como assim, Seu Zé? 🤔',
+                isLucas: true
             },
             {
-                speaker: 'Rosa',
+                speaker: 'Seu Zé',
                 avatar: '🌱',
                 text: 'Eu tenho painéis solares que captam a luz do sol e transformam em energia! Aí eu uso essa energia para ligar as bombas que regam minhas plantações!',
-                isPlayer: false
+                isLucas: false
             },
             {
-                speaker: 'Rosa',
+                speaker: 'Seu Zé',
                 avatar: '🌱',
                 text: 'É como se o sol fosse meu melhor amigo! ☀️',
-                isPlayer: false
+                isLucas: false
             }
         ],
         'piloto': [
             {
-                speaker: 'Carlos',
+                speaker: 'Capitã Ana',
                 avatar: '✈️',
-                text: 'Olá %playerName%! Eu sou a Carlos! ✈️',
-                isPlayer: false
+                text: 'Olá Lucas! Eu sou a Capitã Ana! ✈️',
+                isLucas: false
             },
             {
-                speaker: 'Carlos',
+                speaker: 'Capitã Ana',
                 avatar: '✈️',
                 text: 'Você sabia que o sol é meu GPS natural? Ele me ajuda a saber para onde estou indo!',
-                isPlayer: false
+                isLucas: false
             },
             {
-                speaker: '%playerName%',
+                speaker: 'Lucas',
                 avatar: '👦',
                 text: 'Nossa! Como o sol pode ser um GPS? 🤔',
-                isPlayer: true
+                isLucas: true
             },
             {
-                speaker: 'Carlos',
+                speaker: 'Capitã Ana',
                 avatar: '✈️',
                 text: 'Antigamente, os pilotos usavam o sol para se orientar! Agora temos aviões que voam usando energia solar!',
-                isPlayer: false
+                isLucas: false
             },
             {
-                speaker: 'Carlos',
+                speaker: 'Capitã Ana',
                 avatar: '✈️',
                 text: 'E nos aeroportos, temos painéis solares gigantes que geram energia limpa! É incrível! ☀️',
-                isPlayer: false
+                isLucas: false
             }
         ],
         'astronauta': [
             {
-                speaker: 'Lúcia',
+                speaker: 'Comandante Pedro',
                 avatar: '🚀',
-                text: 'E aí, %playerName%! Eu sou o Lúcia! 🚀',
-                isPlayer: false
+                text: 'E aí, Lucas! Eu sou o Comandante Pedro! 🚀',
+                isLucas: false
             },
             {
-                speaker: 'Lúcia',
+                speaker: 'Comandante Pedro',
                 avatar: '🚀',
                 text: 'Você sabia que no espaço eu posso ver o sol de um jeito que ninguém na Terra consegue?',
-                isPlayer: false
+                isLucas: false
             },
             {
-                speaker: '%playerName%',
+                speaker: 'Lucas',
                 avatar: '👦',
                 text: 'Nossa! Como é o sol no espaço? 🤔',
-                isPlayer: true
+                isLucas: true
             },
             {
-                speaker: 'Lúcia',
+                speaker: 'Comandante Pedro',
                 avatar: '🚀',
                 text: 'É lindo! Sem a atmosfera da Terra, o sol brilha muito mais forte! E nossa estação espacial funciona toda com painéis solares!',
-                isPlayer: false
+                isLucas: false
             },
             {
-                speaker: 'Lúcia',
+                speaker: 'Comandante Pedro',
                 avatar: '🚀',
                 text: 'Eu estudo o sol para entender como ele funciona e ajudar a proteger a Terra! É minha missão! ☀️',
-                isPlayer: false
+                isLucas: false
             }
         ],
         'operador': [
             {
-                speaker: 'Nivaldo',
+                speaker: 'Engenheira Maria',
                 avatar: '⚡',
-                text: 'Oi %playerName%! Eu sou a Nivaldo! ⚡',
-                isPlayer: false
+                text: 'Oi Lucas! Eu sou a Engenheira Maria! ⚡',
+                isLucas: false
             },
             {
-                speaker: 'Nivaldo',
+                speaker: 'Engenheira Maria',
                 avatar: '⚡',
                 text: 'Eu trabalho em uma usina solar gigante! É como se eu fosse a "chefe" da energia do sol!',
-                isPlayer: false
+                isLucas: false
             },
             {
-                speaker: '%playerName%',
+                speaker: 'Lucas',
                 avatar: '👦',
                 text: 'Uau! Como funciona uma usina solar? 🤔',
-                isPlayer: true
+                isLucas: true
             },
             {
-                speaker: 'Nivaldo',
+                speaker: 'Engenheira Maria',
                 avatar: '⚡',
                 text: 'Imagina milhares de espelhos gigantes que seguem o sol! Eles captam a luz e transformam em energia elétrica!',
-                isPlayer: false
+                isLucas: false
             },
             {
-                speaker: 'Nivaldo',
+                speaker: 'Engenheira Maria',
                 avatar: '⚡',
                 text: 'Depois eu envio essa energia para as casas de todo mundo! É como ser a "mãe" da energia limpa! ☀️',
-                isPlayer: false
+                isLucas: false
             }
         ]
     };
@@ -316,7 +325,7 @@ function showDialogue(dialogue) {
     }
     
     // Atualizar spotlight
-    updateCharacterSpotlight(dialogue.isPlayer);
+    updateCharacterSpotlight(dialogue.isLucas);
 }
 
 // Efeito de digitação
@@ -337,15 +346,15 @@ function typeText(element, text) {
 }
 
 // Atualizar spotlight dos personagens
-function updateCharacterSpotlight(isPlayer = null) {
+function updateCharacterSpotlight(isLucas = null) {
     const lucasSpotlight = document.querySelector('.lucas-spotlight');
     const npcSpotlight = document.querySelector('.npc-spotlight');
     
     if (lucasSpotlight && npcSpotlight) {
-        if (isPlayer === true) {
+        if (isLucas === true) {
             lucasSpotlight.classList.add('active');
             npcSpotlight.classList.remove('active');
-        } else if (isPlayer === false) {
+        } else if (isLucas === false) {
             npcSpotlight.classList.add('active');
             lucasSpotlight.classList.remove('active');
         } else {
@@ -399,7 +408,7 @@ function endDialogue() {
     const continueBtn = currentScreen ? currentScreen.querySelector('#continueBtn') : null;
     
     if (continueBtn) {
-        // Verificar se é A Astronauta (final da história)
+        // Verificar se é o astronauta (final da história)
         if (currentScreen.id === 'conversandoAstronauta') {
             continueBtn.innerHTML = '<i class="fas fa-star"></i>';
             continueBtn.onclick = finalizarAventura;
@@ -418,6 +427,7 @@ window.nextDialogue = nextDialogue;
 
 // 4. Voltar para escolha de personagens (Conversa -> Escolha)
 function voltarEscolha() {
+    console.log('Voltando para escolha de personagens');
     showScreen('escolhaPersonagem');
     
     // Atualizar indicadores visuais após a transição
@@ -428,21 +438,25 @@ function voltarEscolha() {
 
 // 5. Voltar para história (Escolha -> História)
 function voltarHistoria() {
+    console.log('Voltando para história');
     showScreen('historia');
 }
 
 // 6. Voltar para início (Qualquer tela -> Apresentação)
 function voltarInicio() {
+    console.log('Voltando para início');
     showScreen('apresentacao');
 }
 
 // 7. Finalizar aventura (Astronauta -> Fim)
 function finalizarAventura() {
+    console.log('Finalizando aventura');
     showScreen('fim');
 }
 
 // 8. Reiniciar aventura (Fim -> Apresentação)
 function reiniciarAventura() {
+    console.log('Reiniciando aventura');
     // Limpar estado
     visitedCharacters = [];
     showScreen('apresentacao');
@@ -614,6 +628,7 @@ document.head.appendChild(style);
 
 // Efeitos sonoros simulados (visual)
 function playSoundEffect(type) {
+    console.log('Efeito sonoro:', type);
     // Aqui você pode adicionar efeitos sonoros reais se quiser
 }
 
@@ -751,7 +766,7 @@ function updateProgressBar() {
     
     // Mostrar mensagem de progresso
     if (visitedCount === requiredCharacters.length) {
-        showMessage('Parabéns! Agora você pode conversar com o Lúcia! 🚀', 'success');
+        showMessage('Parabéns! Agora você pode conversar com o Comandante Pedro! 🚀', 'success');
     }
 }
 
@@ -813,3 +828,14 @@ window.voltarHistoria = voltarHistoria;
 window.voltarInicio = voltarInicio;
 window.finalizarAventura = finalizarAventura;
 window.reiniciarAventura = reiniciarAventura;
+
+console.log('Jogo infantil carregado - funções disponíveis:', {
+    iniciarAventura,
+    conhecerAmigos,
+    conversarComPersonagem,
+    voltarEscolha,
+    voltarHistoria,
+    voltarInicio,
+    finalizarAventura,
+    reiniciarAventura
+});
